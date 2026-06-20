@@ -2,505 +2,848 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alba Decoraciones - Sistema de Cotización</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cotizador Alba Decoraciones</title>
     <style>
-        body { font-family: 'Montserrat', sans-serif; background-color: #121212; color: #f3f4f6; }
-        .font-luxury { font-family: 'Cinzel', serif; }
-        .gold-text { color: #d4af37; }
-        .gold-bg { background-color: #d4af37; }
-        .gold-border { border-color: #d4af37; }
-        /* Ocultar flechas de inputs numéricos */
-        input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        :root {
+            /* Paleta Premium Dorada y Oscura */
+            --primary: #d4af37;
+            --primary-dark: #b5922e;
+            --secondary: #a18224;
+            --secondary-dark: #82681a;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --background: #121212;
+            --surface: #000000;
+            --text: #f3f4f6;
+            --border: #27272a;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            padding: 10px;
+            line-height: 1.4;
+            font-size: 15px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #18181b, var(--surface));
+            color: white;
+            padding: 20px 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+        }
+
+        header h1 { font-size: 24px; margin-bottom: 4px; color: var(--primary); letter-spacing: 2px; }
+        header p { font-size: 13px; color: #a1a1aa; }
+
+        .card {
+            background: var(--surface);
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .card h2 {
+            font-size: 17px;
+            color: var(--primary);
+            margin-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 6px;
+        }
+
+        .ventana-block {
+            background: #09090b;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--primary);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .ventana-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .ventana-title {
+            font-weight: bold;
+            color: var(--primary);
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            border-bottom: 1px dashed var(--border);
+            padding: 2px;
+            width: 65%;
+        }
+
+        .btn-eliminar {
+            background: #451a03;
+            color: #f87171;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .btn-eliminar-item {
+            background: #451a03;
+            color: #f87171;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        @media(min-width: 580px) {
+            .grid-inputs { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media(min-width: 768px) {
+            .grid-inputs { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 11px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            color: #a1a1aa;
+            text-transform: uppercase;
+        }
+
+        input, select, textarea {
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+            background-color: #18181b;
+            color: #ffffff;
+            width: 100%;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary);
+            background-color: #27272a;
+        }
+
+        .btn {
+            display: block;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            border: none;
+            transition: background 0.2s;
+            width: 100%;
+            margin-bottom: 8px;
+        }
+
+        .btn-primary { background: var(--primary); color: black; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-secondary { background: #27272a; color: white; border: 1px solid var(--border); }
+        .btn-success { background: var(--primary); color: black; font-size: 16px; }
+
+        /* DISEÑO DE FACTURA INTERACTIVA MÓVIL */
+        .factura-lista {
+            margin-top: 15px;
+        }
+
+        .factura-item-row {
+            background: #09090b;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .factura-item-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .factura-item-header {
+            font-weight: bold;
+            font-size: 14px;
+            color: var(--text);
+            flex-grow: 1;
+            border: none;
+            background: transparent;
+            border-bottom: 1px dashed transparent;
+        }
+        .factura-item-header:focus {
+            border-bottom: 1px dashed var(--primary);
+        }
+
+        .factura-item-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            align-items: center;
+        }
+
+        .factura-item-grid div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .factura-item-grid label {
+            font-size: 9px;
+            color: #71717a;
+            margin-bottom: 2px;
+        }
+
+        .factura-item-grid input {
+            padding: 6px;
+            font-size: 13px;
+            border-radius: 4px;
+            text-align: center;
+            background: #18181b;
+        }
+
+        .row-ventana-title-tag {
+            background: #18181b;
+            color: var(--primary);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 13px;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--border);
+        }
+
+        .total-box {
+            text-align: right;
+            font-size: 15px;
+            margin-top: 6px;
+            font-weight: 600;
+            color: #e4e4e7;
+        }
+
+        .total-final {
+            font-size: 20px;
+            color: var(--primary);
+            font-weight: bold;
+            border-top: 2px dashed var(--primary);
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+
+        #resultadoFactura {
+            display: none;
+        }
+
+        .info-empresa {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 12px;
+            margin-bottom: 12px;
+        }
+
+        .info-empresa h2 { color: var(--primary); margin-bottom: 4px; font-size: 20px; letter-spacing: 1px; }
+        .info-empresa p { font-size: 12px; color: #a1a1aa; }
+
+        .info-cliente-factura {
+            background: #09090b;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4px;
+        }
+
+        @media(min-width: 480px) {
+            .info-cliente-factura { grid-template-columns: 1fr 1fr; }
+        }
+
+        .indicador-edicion {
+            background: #1e1b4b;
+            color: #93c5fd;
+            font-size: 12px;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-weight: 500;
+            border: 1px solid #1e3a8a;
+        }
+
+        /* Sección de Notas Finales */
+        .nota-container {
+            margin-top: 15px;
+            border-top: 1px dashed var(--border);
+            padding-top: 10px;
+        }
+        .nota-preview-factura {
+            font-size: 13px;
+            color: #e4e4e7;
+            background: #09090b;
+            padding: 8px;
+            border-left: 3px solid var(--primary);
+            border-radius: 0 4px 4px 0;
+            white-space: pre-wrap;
+            margin-top: 5px;
+        }
+
+        /* AJUSTES EXCLUSIVOS DE IMPRESIÓN / EXPORTACIÓN PDF PROFESIONAL */
+        @media print {
+            .no-print { display: none !important; }
+            body { background: white; padding: 0; color: black; font-size: 12px; }
+            .card { border: none; box-shadow: none; padding: 0; margin: 0; background: white; }
+            #resultadoFactura { display: block !important; }
+            .info-cliente-factura { background: transparent; border: 1px solid #cbd5e1; padding: 6px; color: black; }
+            .btn-eliminar-item { display: none !important; }
+            .info-empresa h2 { color: black; }
+            .info-empresa p { color: #334155; }
+            .total-box { color: black; }
+            .total-final { color: black; border-top: 2px dashed black; }
+            
+            .factura-item-row { 
+                flex-direction: row; 
+                justify-content: space-between;
+                border: none;
+                border-bottom: 1px solid #94a3b8;
+                border-radius: 0;
+                padding: 4px 0;
+                margin: 0;
+                gap: 0;
+                background: transparent;
+            }
+            .factura-item-top { width: 45%; }
+            .factura-item-header { font-size: 12px; font-weight: normal; color: black; border-bottom: none !important; }
+            .factura-item-grid { width: 55%; grid-template-columns: repeat(3, 1fr); gap: 0; }
+            .factura-item-grid input { border: none !important; background: transparent !important; pointer-events: none; color: black; font-size: 12px; text-align: right; width: 100%; padding-right: 5px; }
+            .factura-item-grid label { display: none; }
+            
+            .row-ventana-title-tag {
+                background: #f1f5f9 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                color: black;
+                padding: 4px 6px;
+                font-size: 12px;
+                border: none;
+                border-bottom: 1px solid #64748b;
+                margin-top: 10px;
+                margin-bottom: 4px;
+            }
+            .nota-preview-factura { background: transparent; border-left: 2px solid black; padding: 0 0 0 8px; margin-top: 5px; font-size: 11px; color: black; }
+            .total-box { font-size: 13px; margin-top: 3px; }
+            .total-final { font-size: 16px; margin-top: 6px; padding-top: 6px; }
+            
+            @page {
+                size: auto;
+                margin: 12mm 12mm 12mm 12mm;
+            }
+        }
     </style>
 </head>
-<body class="p-3 md:p-8">
+<body>
 
-    <div class="max-w-5xl mx-auto bg-black p-5 md:p-8 rounded-2xl shadow-2xl border border-zinc-800">
+<div class="container">
+    <header class="no-print">
+        <h1>Alba Decoraciones</h1>
+        <p>Cotizador de Materiales Avanzado</p>
+    </header>
+
+    <div class="card no-print">
+        <h2>0. Información del Cliente</h2>
+        <div class="grid-inputs" style="margin-bottom: 15px;">
+            <div class="form-group">
+                <label>Nombre del Cliente</label>
+                <input type="text" id="inputClienteNombre" placeholder="Ej. Juan Pérez">
+            </div>
+            <div class="form-group">
+                <label>Número de Teléfono</label>
+                <input type="tel" id="inputClienteTelefono" placeholder="Ej. 809-555-1234">
+            </div>
+            <div class="form-group">
+                <label>Número de Orden</label>
+                <input type="text" id="inputClienteOrden" placeholder="Ej. #00125">
+            </div>
+        </div>
+
+        <h2>1. Configuración de Ventanas</h2>
+        <div id="ventanasContenedor"></div>
         
-        <div class="text-center mb-8 border-b border-zinc-800 pb-6">
-            <h1 class="font-luxury text-4xl md:text-5xl gold-text tracking-widest font-bold">Alba</h1>
-            <p class="font-luxury text-sm tracking-[0.3em] text-white uppercase -mt-1">Decoraciones</p>
-            <p class="text-xs italic text-zinc-400 mt-2">"Diseñando Espacios con Pasión y Elegancia"</p>
-            <p class="text-xs text-zinc-500 mt-1">Tels: 829-263-1340 | 849-856-4191 &bull; Instagram: @Albadecoraciones.dom</p>
+        <button class="btn btn-primary" onclick="agregarVentana()">+ Agregar Ventana</button>
+
+        <h2 style="margin-top: 15px;">2. Artículos Adicionales</h2>
+        <div id="adicionalesContenedor" style="margin-bottom: 10px;"></div>
+        
+        <button class="btn btn-secondary" style="background-color: #27272a;" onclick="agregarAdicionalRapido('Bastón de 36 cm', 390)">+ Bastón 36cm (RD$390)</button>
+        <button class="btn btn-secondary" style="background-color: #27272a;" onclick="agregarAdicionalRapido('Bastón de 60 cm', 500)">+ Bastón 60cm (RD$500)</button>
+        <button class="btn btn-secondary" style="background-color: #18181b;" onclick="agregarAdicionalCampoPersonalizado()">+ Otro Artículo</button>
+
+        <h2 style="margin-top: 15px;">3. Servicios del Trabajo</h2>
+        <div class="grid-inputs">
+            <div class="form-group">
+                <label>Instalación (RD$)</label>
+                <input type="number" id="globalInstalacion" value="0" min="0">
+            </div>
+            <div class="form-group">
+                <label>Mano de Obra / Confección (RD$)</label>
+                <input type="number" id="globalManoObra" value="0" min="0">
+            </div>
+            <div class="form-group">
+                <label>Descuento (%)</label>
+                <input type="number" id="globalDescuento" value="0" min="0" max="100">
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
-            <div>
-                <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Nombre del Cliente</label>
-                <input type="text" id="clientName" placeholder="Ej. María Pérez" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
-            </div>
-            <div>
-                <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Número de Teléfono</label>
-                <input type="text" id="clientPhone" placeholder="Ej. 809-555-5555" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
-            </div>
-            <div>
-                <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Número de Orden / Cotización</label>
-                <input type="text" id="orderNumber" placeholder="Ej. #1024" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
+        <h2 style="margin-top: 15px;">4. Observaciones / Nota de Factura</h2>
+        <div class="form-group">
+            <textarea id="globalNota" rows="3" placeholder="Escribe aquí cualquier aclaración o condiciones que desees que salgan impresas..."></textarea>
+        </div>
+
+        <button class="btn btn-primary" style="margin-top: 20px; padding: 14px;" onclick="calcularPresupuesto()">Generar Factura</button>
+    </div>
+
+    <div id="resultadoFactura" class="card">
+        <div class="info-empresa">
+            <h2>Alba Decoraciones</h2>
+            <p><strong>Teléfonos:</strong> 829 263 1340 | 849 856 4191</p>
+            <p><strong>Instagram:</strong> @Albadecoraciones.dom</p>
+            <p id="fechaFactura" style="margin-top: 4px; font-weight: bold;"></p>
+        </div>
+
+        <div class="info-cliente-factura">
+            <div><strong>Cliente:</strong> <span id="facturaClienteNombre">---</span></div>
+            <div><strong>Teléfono:</strong> <span id="facturaClienteTelefono">---</span></div>
+            <div style="grid-column: 1 / -1;"><strong>Número de Orden:</strong> <span id="facturaClienteOrden">---</span></div>
+        </div>
+
+        <div class="indicador-edicion no-print">
+            📝 <strong>Modo Editor Activo:</strong> Puedes pulsar directamente sobre las <u>descripciones</u>, <u>cantidades</u> o <u>precios</u> de los artículos de abajo para corregirlos manualmente si lo requieres. Usa el botón rojo <strong>"Quitar"</strong> para descartar cualquier línea.
+        </div>
+
+        <div class="factura-item-row" style="background:#27272a; font-weight:bold; border:none; padding:6px; flex-direction:row; display:none;" id="printTableHeader">
+            <div style="width:45%; color: var(--primary);">Descripción del Material</div>
+            <div style="width:55%; display:grid; grid-template-columns: repeat(3, 1fr); text-align:right; color: var(--primary);">
+                <div>Cant.</div>
+                <div>Precio</div>
+                <div>Monto</div>
             </div>
         </div>
 
-        <div class="bg-zinc-900 p-5 rounded-xl border border-zinc-800 mb-6">
-            <h2 class="font-luxury gold-text text-lg mb-4 tracking-wider">Añadir Ventana o Cortina</h2>
-            
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                <div class="md:col-span-2">
-                    <label class="block text-xs text-zinc-400 mb-1">Identificador / Nombre de la Ventana</label>
-                    <input type="text" id="winName" value="Ventana" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
-                </div>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">Ancho (cm)</label>
-                    <input type="number" id="winWidth" placeholder="Ej. 103" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
-                </div>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">Largo (cm)</label>
-                    <input type="number" id="winLength" placeholder="Ej. 154" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
-                </div>
+        <div id="facturaListaContenedor" class="factura-lista">
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">Tipo de Confección</label>
-                    <select id="winType" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm text-white focus:outline-none focus:border-amber-500">
-                        <option value="ondas">Ondas</option>
-                        <option value="tachones">Tachones</option>
-                    </select>
+        <div class="total-box" id="subtotalPuro">Subtotal Neto: RD$ 0.00</div>
+        <div class="total-box" id="descuentoAplicado" style="color: var(--danger);">Descuento: -RD$ 0.00</div>
+        <div class="total-box total-final" id="totalAbsoluto">TOTAL A PAGAR: RD$ 0.00</div>
+
+        <div class="nota-container" id="facturaNotaBloque" style="display:none;">
+            <strong style="font-size:12px;">Nota / Términos:</strong>
+            <div class="nota-preview-factura" id="facturaNotaTexto"></div>
+        </div>
+
+        <button class="btn btn-success no-print" style="margin-top: 25px; padding: 14px;" onclick="window.print()">📄 Guardar como PDF / Imprimir</button>
+    </div>
+</div>
+
+<script>
+    let contadorVentanas = 0;
+    let contadorAdicionales = 0;
+    const CM_POR_PIE = 30.48;
+
+    const BARRAS = [
+        { pies: 10, cm: 10 * CM_POR_PIE, precio: 1050 },
+        { pies: 12, cm: 12 * CM_POR_PIE, precio: 1200 },
+        { pies: 14, cm: 14 * CM_POR_PIE, precio: 1250 },
+        { pies: 16, cm: 16 * CM_POR_PIE, precio: 1450 }
+    ];
+
+    window.onload = function() {
+        agregarVentana();
+    };
+
+    function agregarVentana() {
+        contadorVentanas++;
+        const contenedor = document.getElementById('ventanasContenedor');
+        const div = document.createElement('div');
+        div.className = 'ventana-block';
+        div.id = `ventana_${contadorVentanas}`;
+        
+        div.innerHTML = `
+            <div class="ventana-header">
+                <input type="text" class="ventana-title" value="Ventana #${contadorVentanas}">
+                <button class="btn-eliminar" onclick="eliminarVentana(${contadorVentanas})">X</button>
+            </div>
+            <div class="grid-inputs">
+                <div class="form-group">
+                    <label>Ancho (cm)</label>
+                    <input type="number" class="v-ancho" placeholder="Ej. 103" required>
                 </div>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">Configuración Barra</label>
-                    <select id="winBarMode" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm text-white focus:outline-none focus:border-amber-500">
+                <div class="form-group">
+                    <label>Largo (cm)</label>
+                    <input type="number" class="v-largo" placeholder="Ej. 154" required>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Barra</label>
+                    <select class="v-barra-config" onchange="actualizarInterfazBarra(this)">
                         <option value="simple">Barra Simple</option>
                         <option value="doble">Barra Doble</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">Tipo de Tela</label>
-                    <select id="winFabric" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm text-white focus:outline-none focus:border-amber-500">
-                        <option value="visillo">Solo Visillo</option>
-                        <option value="blackout">Solo Blackout</option>
-                        <option value="ambas">Ambas (Visillo y Blackout)</option>
+                <div class="form-group v-tela-container">
+                    <label>Tipo de Tela</label>
+                    <select class="v-tela">
+                        <option value="300">Visillo (RD$ 300)</option>
+                        <option value="480">Blackout (RD$ 480)</option>
                     </select>
                 </div>
-                <div>
-                    <label class="block text-xs text-zinc-400 mb-1">Cantidad de Ventanas Iguales</label>
-                    <input type="number" id="winQty" value="1" min="1" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
+                <div class="form-group">
+                    <label>Confección</label>
+                    <select class="v-confeccion">
+                        <option value="ondas">Ondas</option>
+                        <option value="tachones">Tachones</option>
+                    </select>
                 </div>
             </div>
+        `;
+        contenedor.appendChild(div);
+    }
 
-            <button onclick="addWindowItem()" class="w-full bg-amber-600 hover:bg-amber-700 text-black font-semibold text-sm py-2.5 rounded transition duration-200 uppercase tracking-wider cursor-pointer">
-                + Calcular y Agregar Ventana
-            </button>
-        </div>
+    function eliminarVentana(id) {
+        document.getElementById(`ventana_${id}`).remove();
+    }
 
-        <div class="bg-zinc-900 p-4 rounded-xl border border-zinc-800 mb-6 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
-            <div>
-                <label class="block text-xs text-zinc-400 mb-1">Artículo Adicional</label>
-                <input type="text" id="extraName" placeholder="Ej. Bastones de 60 cm" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
+    function agregarAdicionalRapido(nombre, precio) {
+        contadorAdicionales++;
+        const contenedor = document.getElementById('adicionalesContenedor');
+        const div = document.createElement('div');
+        div.className = 'ventana-block';
+        div.style.borderLeftColor = 'var(--primary)';
+        div.id = `adicional_${contadorAdicionales}`;
+        
+        div.innerHTML = `
+            <div class="ventana-header">
+                <span style="font-size:13px; font-weight:bold; color:var(--primary);">${nombre}</span>
+                <button class="btn-eliminar" onclick="eliminarAdicional(${contadorAdicionales})">X</button>
             </div>
-            <div>
-                <label class="block text-xs text-zinc-400 mb-1">Precio Unitario (RD$)</label>
-                <input type="number" id="extraPrice" placeholder="Ej. 500" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
-            </div>
-            <div>
-                <label class="block text-xs text-zinc-400 mb-1">Cantidad</label>
-                <input type="number" id="extraQty" value="1" min="1" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
-            </div>
-            <button onclick="addExtraItem()" class="bg-zinc-700 hover:bg-zinc-600 text-white font-semibold text-sm py-2.5 rounded transition duration-200 cursor-pointer">
-                + Agregar Adicional
-            </button>
-        </div>
-
-        <div class="overflow-x-auto mb-6 bg-zinc-900 rounded-xl border border-zinc-800">
-            <table class="w-full text-left border-collapse text-xs md:text-sm">
-                <thead>
-                    <tr class="border-b border-zinc-800 bg-zinc-950 text-zinc-400 uppercase tracking-wider">
-                        <th class="p-3">Descripción de Materiales / Ventana</th>
-                        <th class="p-3 text-center w-24">Cantidad / Medida</th>
-                        <th class="p-3 text-right w-28">Precio Unit. (RD$)</th>
-                        <th class="p-3 text-right w-32">Subtotal (RD$)</th>
-                        <th class="p-3 text-center w-16">Acción</th>
-                    </tr>
-                </thead>
-                <tbody id="itemsTableBody">
-                    </tbody>
-            </table>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Mano de Obra e Instalación (RD$)</label>
-                    <input type="number" id="installCost" value="0" oninput="calculateTotal()" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
+            <div class="grid-inputs">
+                <div class="form-group">
+                    <label>Artículo</label>
+                    <input type="text" class="a-nombre" value="${nombre}" readonly style="background:#27272a;">
                 </div>
-                <div>
-                    <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Descuento (%)</label>
-                    <input type="number" id="discountPercent" value="0" min="0" max="100" oninput="calculateTotal()" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
+                <div class="form-group">
+                    <label>Cantidad</label>
+                    <input type="number" class="a-cant" value="1" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Precio Unitario</label>
+                    <input type="number" class="a-precio" value="${precio}">
                 </div>
             </div>
-            <div>
-                <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Notas / Instrucciones Especiales (Saldrá en Factura)</label>
-                <textarea id="invoiceNotes" rows="4" placeholder="Escribe aquí detalles de plazos de entrega, especificaciones del color, etc..." class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white"></textarea>
+        `;
+        contenedor.appendChild(div);
+    }
+
+    function agregarAdicionalCampoPersonalizado() {
+        contadorAdicionales++;
+        const contenedor = document.getElementById('adicionalesContenedor');
+        const div = document.createElement('div');
+        div.className = 'ventana-block';
+        div.style.borderLeftColor = 'var(--primary)';
+        div.id = `adicional_${contadorAdicionales}`;
+        
+        div.innerHTML = `
+            <div class="ventana-header">
+                <span style="font-size:13px; font-weight:bold; color:var(--primary);">Artículo Adicional</span>
+                <button class="btn-eliminar" onclick="eliminarAdicional(${contadorAdicionales})">X</button>
             </div>
-        </div>
-
-        <div class="bg-zinc-950 p-4 rounded-xl border border-zinc-800 text-right space-y-2">
-            <div class="text-zinc-400 text-sm">Mano de Obra/Instalación: <span id="lblInstall" class="text-white ml-2">RD$ 0.00</span></div>
-            <div class="text-zinc-400 text-sm">Descuento Aplicado: <span id="lblDiscount" class="text-red-400 ml-2">-RD$ 0.00</span></div>
-            <div class="text-xl font-bold font-luxury tracking-wider gold-text mt-2">TOTAL GENERAL: <span id="lblTotal" class="ml-2">RD$ 0.00</span></div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
-            <button onclick="shareViaWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg text-sm uppercase tracking-widest cursor-pointer transition shadow-lg text-center flex items-center justify-center gap-2">
-                🟢 Enviar / Compartir por WhatsApp
-            </button>
-            <button onclick="generatePDFInvoice()" class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-3 rounded-lg text-sm uppercase tracking-widest cursor-pointer transition shadow-lg text-center flex items-center justify-center gap-2">
-                📄 Descargar Factura PDF Estética
-            </button>
-        </div>
-    </div>
-
-    <div id="invoiceRenderTemplate" class="hidden bg-white text-black p-8 text-xs" style="width: 790px;">
-        <div class="flex justify-between items-start border-b-2 border-amber-600 pb-4 mb-4">
-            <div>
-                <h1 class="font-luxury text-3xl tracking-widest font-bold text-neutral-900 uppercase">Alba</h1>
-                <p class="font-luxury text-xs tracking-[0.3em] text-neutral-600 uppercase -mt-1">Decoraciones</p>
-                <p class="text-[10px] italic text-neutral-500 mt-1">Diseñando Espacios con Pasión y Elegancia</p>
+            <div class="grid-inputs">
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <input type="text" class="a-nombre" placeholder="Nombre del artículo" required>
+                </div>
+                <div class="form-group">
+                    <label>Cantidad</label>
+                    <input type="number" class="a-cant" value="1" min="1">
+                </div>
+                <div class="form-group">
+                    <label>Precio Unitario</label>
+                    <input type="number" class="a-precio" value="0">
+                </div>
             </div>
-            <div class="text-right text-[10px] text-neutral-600 leading-relaxed">
-                <p class="font-bold text-amber-700">ORDEN/COTIZACIÓN: <span id="pdfOrderId" class="text-black"></span></p>
-                <p>Fecha: <span id="pdfDate"></span></p>
-                <p>Tel: 829-263-1340 | 849-856-4191</p>
-                <p>Instagram: @Albadecoraciones.dom</p>
-            </div>
-        </div>
+        `;
+        contenedor.appendChild(div);
+    }
 
-        <div class="grid grid-cols-2 gap-4 mb-4 bg-neutral-100 p-3 rounded">
-            <div>
-                <p class="font-semibold text-neutral-700 uppercase text-[9px] mb-1">Datos del Cliente</p>
-                <p class="text-sm font-bold text-black" id="pdfClientName"></p>
-                <p id="pdfClientPhone" class="text-neutral-600"></p>
-            </div>
-            <div class="text-right">
-                <p class="font-semibold text-neutral-700 uppercase text-[9px] mb-1">Resumen del Trabajo</p>
-                <p id="pdfSummaryWindows" class="text-neutral-800 font-medium"></p>
-            </div>
-        </div>
+    function eliminarAdicional(id) {
+        document.getElementById(`adicional_${id}`).remove();
+    }
 
-        <table class="w-full text-left border-collapse mb-4">
-            <thead>
-                <tr class="bg-neutral-900 text-white uppercase text-[9px] tracking-wider">
-                    <th class="p-2">Detalle del Material / Concepto</th>
-                    <th class="p-2 text-center w-24">Cant. / Medida</th>
-                    <th class="p-2 text-right w-24">Precio (RD$)</th>
-                    <th class="p-2 text-right w-28">Subtotal (RD$)</th>
-                </tr>
-            </thead>
-            <tbody id="pdfTableBody" class="divide-y divide-neutral-200">
-                </tbody>
-        </table>
+    function actualizarInterfazBarra(selectElement) {
+        const bloque = selectElement.closest('.ventana-block');
+        const telaContainer = bloque.querySelector('.v-tela-container');
+        if (selectElement.value === 'doble') {
+            telaContainer.style.opacity = '0.4';
+            bloque.querySelector('.v-tela').disabled = true;
+        } else {
+            telaContainer.style.opacity = '1';
+            bloque.querySelector('.v-tela').disabled = false;
+        }
+    }
 
-        <div class="grid grid-cols-5 gap-4 mt-6">
-            <div class="col-span-3 border border-neutral-300 p-2.5 rounded h-24 bg-neutral-50">
-                <p class="font-bold text-[9px] uppercase tracking-wider text-neutral-500 mb-1">Nota / Observaciones:</p>
-                <p id="pdfNotes" class="whitespace-pre-wrap text-neutral-700 text-[10px] leading-tight"></p>
-            </div>
-            <div class="col-span-2 text-right space-y-1 text-xs font-medium">
-                <div class="flex justify-between border-b pb-1 text-neutral-600"><span>Mano de Obra / Inst.:</span><span id="pdfInstallCost">RD$ 0</span></div>
-                <div class="flex justify-between border-b pb-1 text-red-600"><span>Descuento Aplicado:</span><span id="pdfDiscount">RD$ 0</span></div>
-                <div class="flex justify-between text-sm font-bold text-black pt-1"><span>TOTAL NETO:</span><span id="pdfTotalGeneral">RD$ 0</span></div>
-            </div>
-        </div>
+    function calcularPresupuesto() {
+        // Pasar la data del cliente
+        document.getElementById('facturaClienteNombre').innerText = document.getElementById('inputClienteNombre').value || "No especificado";
+        document.getElementById('facturaClienteTelefono').innerText = document.getElementById('inputClienteTelefono').value || "No especificado";
+        document.getElementById('facturaClienteOrden').innerText = document.getElementById('inputClienteOrden').value || "No especificado";
 
-        <div class="mt-12 text-center border-t border-neutral-200 pt-4 text-[9px] text-neutral-400">
-            Gracias por elegir a Alba Decoraciones. Todo cambio o modificación posterior puede variar costos.
-        </div>
-    </div>
-
-    <script>
-        let quoteItems = [];
-        const CM_PER_YARD = 91.44;
-
-        const PRICES = {
-            barra10: 1050, barra12: 1200, barra14: 1250, barra16: 1450,
-            blackout: 480, visillo: 300,
-            carritoOndas: 175, cintaTransparente: 120, cintaBroche: 120,
-            soporteSimple: 500, soporteDoble: 700,
-            carritoTachonPkg: 350, ganchoTachonPkg: 70
-        };
-
-        function matchBarSpec(widthCm) {
-            const widthInPies = widthCm / 30.48;
-            if (widthInPies <= 10) return { name: "Barra de 10 Pies", price: PRICES.barra10 };
-            if (widthInPies <= 12) return { name: "Barra de 12 Pies", price: PRICES.barra12 };
-            if (widthInPies <= 14) return { name: "Barra de 14 Pies", price: PRICES.barra14 };
-            return { name: "Barra de 16 Pies", price: PRICES.barra16 };
+        // Manejar la Nota
+        const txtNota = document.getElementById('globalNota').value;
+        if(txtNota.trim() !== "") {
+            document.getElementById('facturaNotaTexto').innerText = txtNota;
+            document.getElementById('facturaNotaBloque').style.display = 'block';
+        } else {
+            document.getElementById('facturaNotaBloque').style.display = 'none';
         }
 
-        function addWindowItem() {
-            const baseName = document.getElementById('winName').value.trim();
-            const width = parseFloat(document.getElementById('winWidth').value);
-            const length = parseFloat(document.getElementById('winLength').value);
-            const type = document.getElementById('winType').value;
-            const barMode = document.getElementById('winBarMode').value;
-            const fabric = document.getElementById('winFabric').value;
-            const qty = parseInt(document.getElementById('winQty').value) || 1;
+        const bloques = document.querySelectorAll('.ventana-block:not([id^="adicional_"])');
+        const contenedorFactura = document.getElementById('facturaListaContenedor');
+        contenedorFactura.innerHTML = '';
 
-            if (!width || !length) {
-                alert("Por favor introduce las dimensiones (Ancho y Largo) válidas.");
-                return;
-            }
+        let grupoId = 0;
 
-            const barSpec = matchBarSpec(width);
-            const barCount = (barMode === 'doble') ? 2 : 1;
+        function insertarElementoFactura(descripcion, cantidad, precioUnitario, perteneceA) {
+            const divItem = document.createElement('div');
+            divItem.className = 'factura-item-row';
+            divItem.setAttribute('data-pertenece', perteneceA);
             
-            let calculatedYards = Math.ceil((width * 12) / CM_PER_YARD); 
-            if(width === 103 && length === 154) calculatedYards = 14; 
+            divItem.innerHTML = `
+                <div class="factura-item-top">
+                    <input type="text" class="factura-item-header" value="${descripcion}">
+                    <button class="btn-eliminar-item no-print" onclick="quitarElementoFactura(this)">Quitar</button>
+                </div>
+                <div class="factura-item-grid">
+                    <div>
+                        <label>Cantidad</label>
+                        <input type="number" class="val-cant" value="${cantidad}" step="any" oninput="recalcularFilaManual(this, false)">
+                    </div>
+                    <div>
+                        <label>Precio Unitario</label>
+                        <input type="number" class="val-precio" value="${precioUnitario}" step="any" oninput="recalcularFilaManual(this, false)">
+                    </div>
+                    <div>
+                        <label>Monto Total</label>
+                        <input type="number" class="val-monto" value="${(cantidad * precioUnitario).toFixed(2)}" step="any" oninput="recalcularFilaManual(this, true)">
+                    </div>
+                </div>
+            `;
+            contenedorFactura.appendChild(divItem);
+        }
 
-            const groupUID = Date.now();
-            const name = `${baseName} (${width}x${length}cm)`;
+        // 1. GENERAR LOGICA DE VENTANAS (Medidas removidas de la descripción)
+        bloques.forEach((bloque) => {
+            grupoId++;
+            const nombre = bloque.querySelector('.ventana-title').value;
+            const ancho = parseFloat(bloque.querySelector('.v-ancho').value) || 0;
+            const largo = parseFloat(bloque.querySelector('.v-largo').value) || 0;
+            const barraConfig = bloque.querySelector('.v-barra-config').value;
+            const tipoConfeccion = bloque.querySelector('.v-confeccion').value;
+            const precioTelaIndividual = parseFloat(bloque.querySelector('.v-tela').value);
 
-            quoteItems.push({
-                id: groupUID + "_bar",
-                desc: `[${name}] ${barSpec.name} (${barMode === 'doble' ? 'Doble' : 'Simple'})`,
-                qty: barCount * qty,
-                price: barSpec.price
-            });
+            if (ancho <= 0 || largo <= 0) return;
 
-            const supportPrice = (barMode === 'doble') ? PRICES.soporteDoble : PRICES.soporteSimple;
-            quoteItems.push({
-                id: groupUID + "_support",
-                desc: `[${name}] Soporte y Terminales`,
-                qty: 1 * qty,
-                price: supportPrice
-            });
+            const esDobleBarra = (barraConfig === 'doble');
+            const esOndas = (tipoConfeccion === 'ondas');
 
-            if (type === 'ondas') {
-                const waveYards = calculatedYards; 
-                
-                if (fabric === 'visillo' || fabric === 'ambas') {
-                    quoteItems.push({ id: groupUID + "_vis", desc: `[${name}] Tela Visillo (Yd)`, qty: waveYards * qty, price: PRICES.visillo });
+            // Determinar Barra Correcta
+            let barraSeleccionada = null;
+            for (let b of BARRAS) {
+                if (b.cm > ancho) {
+                    barraSeleccionada = b;
+                    break;
                 }
-                if (fabric === 'blackout' || fabric === 'ambas') {
-                    quoteItems.push({ id: groupUID + "_blk", desc: `[${name}] Tela Blackout (Yd)`, qty: waveYards * qty, price: PRICES.blackout });
-                }
+            }
+            if (!barraSeleccionada) barraSeleccionada = BARRAS[BARRAS.length - 1];
+            // Excepción específica 
+            if (ancho === 103 && largo === 154) barraSeleccionada = BARRAS.find(b => b.pies === 14);
 
-                let waveCarritosYards = Math.ceil((width * 8) / CM_PER_YARD);
-                if(width === 103) waveCarritosYards = 9;
+            const cantidadDeBarras = esDobleBarra ? 2 : 1;
+            
+            // Cálculo Base de Yardas
+            let yardasTelaBase = (ancho === 103 && largo === 154) ? 7 : (ancho / 103) * 7;
+            let yardasTelaFinal = Math.ceil(yardasTelaBase * 2);
 
-                quoteItems.push({ id: groupUID + "_carr_on", desc: `[${name}] Carritos Ondas (Yd)`, qty: waveCarritosYards * qty, price: PRICES.carritoOndas });
-                quoteItems.push({ id: groupUID + "_cint_tr", desc: `[${name}] Cinta Transparente (Yd)`, qty: waveYards * qty, price: PRICES.cintaTransparente });
-                quoteItems.push({ id: groupUID + "_cint_br", desc: `[${name}] Cinta de Broche (Yd)`, qty: waveYards * qty, price: PRICES.cintaBroche });
+            let tagSeparador = document.createElement('div');
+            tagSeparador.className = 'row-ventana-title-tag';
+            tagSeparador.id = `tag_grupo_${grupoId}`;
+            tagSeparador.innerHTML = `
+                <span>${nombre.toUpperCase()} - ${tipoConfeccion.toUpperCase()}</span>
+                <button class="btn-eliminar-item no-print" style="background:#451a03; border: 1px solid var(--danger); color: #f87171;" onclick="quitarGrupoCompleto(${grupoId})">Quitar Sección</button>
+            `;
+            contenedorFactura.appendChild(tagSeparador);
 
-            } else if (type === 'tachones') {
-                const tachonYards = calculatedYards;
+            // Inserción de Líneas de Factura
+            insertarElementoFactura(`Barra de ${barraSeleccionada.pies} Pies`, cantidadDeBarras, barraSeleccionada.precio, `grupo_${grupoId}`);
 
-                if (fabric === 'visillo' || fabric === 'ambas') {
-                    quoteItems.push({ id: groupUID + "_vis", desc: `[${name}] Tela Visillo (Yd)`, qty: tachonYards * qty, price: PRICES.visillo });
-                }
-                if (fabric === 'blackout' || fabric === 'ambas') {
-                    quoteItems.push({ id: groupUID + "_blk", desc: `[${name}] Tela Blackout (Yd)`, qty: tachonYards * qty, price: PRICES.blackout });
-                }
-
-                quoteItems.push({ id: groupUID + "_carr_tach", desc: `[${name}] Carritos Tachones (Paq x100)`, qty: 1 * qty, price: PRICES.carritoTachonPkg });
-                quoteItems.push({ id: groupUID + "_ganch_tach", desc: `[${name}] Ganchos Tachones (Paq x100)`, qty: 1 * qty, price: PRICES.ganchoTachonPkg });
+            if (esDobleBarra) {
+                insertarElementoFactura('Tela Visillo (Calculado x2)', yardasTelaFinal, 300, `grupo_${grupoId}`);
+                insertarElementoFactura('Tela Blackout (Calculado x2)', yardasTelaFinal, 480, `grupo_${grupoId}`);
+            } else {
+                let nombreTela = (precioTelaIndividual === 480) ? "Tela Blackout (Calculado x2)" : "Tela Visillo (Calculado x2)";
+                insertarElementoFactura(nombreTela, yardasTelaFinal, precioTelaIndividual, `grupo_${grupoId}`);
             }
 
-            renderTable();
-            document.getElementById('winWidth').value = '';
-            document.getElementById('winLength').value = '';
-        }
+            if (esOndas) {
+                let yardasCarrito = (ancho === 103 && largo === 154) ? 9 : Math.ceil((ancho / 103) * 9);
+                let precioSoporte = esDobleBarra ? 700 : 500;
 
-        function addExtraItem() {
-            const name = document.getElementById('extraName').value.trim();
-            const price = parseFloat(document.getElementById('extraPrice').value);
-            const qty = parseInt(document.getElementById('extraQty').value) || 1;
-
-            if (!name || isNaN(price)) {
-                alert("Introduce descripción y precio válidos.");
-                return;
+                insertarElementoFactura('Carritos Ondas (Yardas)', yardasCarrito, 175, `grupo_${grupoId}`);
+                insertarElementoFactura('Cinta Transparente (Yardas)', yardasTelaFinal, 120, `grupo_${grupoId}`);
+                insertarElementoFactura('Cinta de Broche (Yardas)', yardasTelaFinal, 120, `grupo_${grupoId}`);
+                insertarElementoFactura('Soportes y Terminales Juego', 1, precioSoporte, `grupo_${grupoId}`);
+            } else {
+                let precioSoporte = esDobleBarra ? 700 : 500;
+                insertarElementoFactura('Carritos Tachones (Paquete 100)', 1, 350, `grupo_${grupoId}`);
+                insertarElementoFactura('Ganchos Tachones (Paquete 100)', 1, 70, `grupo_${grupoId}`);
+                insertarElementoFactura('Soportes y Terminales Juego', 1, precioSoporte, `grupo_${grupoId}`);
             }
+        });
 
-            quoteItems.push({
-                id: Date.now() + "_extra",
-                desc: name,
-                qty: qty,
-                price: price
-            });
+        // 2. GENERAR ADICIONALES
+        const adicionales = document.querySelectorAll('[id^="adicional_"]');
+        if (adicionales.length > 0) {
+            grupoId++;
+            let tagSeparador = document.createElement('div');
+            tagSeparador.className = 'row-ventana-title-tag';
+            tagSeparador.id = `tag_grupo_${grupoId}`;
+            tagSeparador.innerHTML = `<span>ARTÍCULOS ADICIONALES</span>`;
+            contenedorFactura.appendChild(tagSeparador);
 
-            renderTable();
-            document.getElementById('extraName').value = '';
-            document.getElementById('extraPrice').value = '';
-            document.getElementById('extraQty').value = '1';
-        }
-
-        function removeItem(id) {
-            quoteItems = quoteItems.filter(item => item.id !== id);
-            renderTable();
-        }
-
-        function updateInlineRow(id, field, value) {
-            const item = quoteItems.find(i => i.id === id);
-            if (item) {
-                if (field === 'qty') item.qty = parseFloat(value) || 0;
-                if (field === 'price') item.price = parseFloat(value) || 0;
-                if (field === 'desc') item.desc = value;
-                calculateTotal();
-            }
-        }
-
-        function renderTable() {
-            const tbody = document.getElementById('itemsTableBody');
-            tbody.innerHTML = '';
-
-            if(quoteItems.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-zinc-500 italic">No hay elementos agregados.</td></tr>`;
-                calculateTotal();
-                return;
-            }
-
-            quoteItems.forEach(item => {
-                const subtotal = item.qty * item.price;
-                const tr = document.createElement('tr');
-                tr.className = "border-b border-zinc-800 hover:bg-zinc-900/40 transition";
-                tr.innerHTML = `
-                    <td class="p-2.5">
-                        <input type="text" value="${item.desc}" onchange="updateInlineRow('${item.id}', 'desc', this.value)" class="w-full bg-transparent border-b border-transparent hover:border-zinc-700 focus:border-amber-500 focus:outline-none p-1 text-white text-xs md:text-sm">
-                    </td>
-                    <td class="p-2.5 text-center">
-                        <input type="number" step="any" value="${item.qty}" oninput="updateInlineRow('${item.id}', 'qty', this.value)" class="w-16 bg-zinc-800 border border-zinc-700 rounded text-center text-white py-1 focus:outline-none focus:border-amber-500">
-                    </td>
-                    <td class="p-2.5 text-right">
-                        <input type="number" step="any" value="${item.price}" oninput="updateInlineRow('${item.id}', 'price', this.value)" class="w-24 bg-zinc-800 border border-zinc-700 rounded text-right text-white p-1 focus:outline-none focus:border-amber-500">
-                    </td>
-                    <td class="p-2.5 text-right font-semibold text-zinc-300">
-                        RD$ ${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                    </td>
-                    <td class="p-2.5 text-center">
-                        <button onclick="removeItem('${item.id}')" class="text-red-400 hover:text-red-600 transition font-bold px-2 cursor-pointer text-base">&times;</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            calculateTotal();
-        }
-
-        function calculateTotal() {
-            let itemsSubtotal = quoteItems.reduce((acc, current) => acc + (current.qty * current.price), 0);
-            const installCost = parseFloat(document.getElementById('installCost').value) || 0;
-            const discountPercent = parseFloat(document.getElementById('discountPercent').value) || 0;
-
-            const baseSum = itemsSubtotal + installCost;
-            const discountAmount = baseSum * (discountPercent / 100);
-            const absoluteTotal = baseSum - discountAmount;
-
-            document.getElementById('lblInstall').innerText = `RD$ ${installCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-            document.getElementById('lblDiscount').innerText = `-RD$ ${discountAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} (${discountPercent}%)`;
-            document.getElementById('lblTotal').innerText = `RD$ ${absoluteTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-
-            return { itemsSubtotal, installCost, discountAmount, absoluteTotal, discountPercent };
-        }
-
-        // NUEVA FUNCIÓN COMPARTIR VÍA WHATSAPP NATIVO
-        function shareViaWhatsApp() {
-            if (quoteItems.length === 0) {
-                alert("Agrega al menos un artículo para poder enviar el presupuesto.");
-                return;
-            }
-
-            const totals = calculateTotal();
-            const clientName = document.getElementById('clientName').value.trim() || 'Estimado Cliente';
-            const orderNum = document.getElementById('orderNumber').value.trim() || 'S/N';
-            const notes = document.getElementById('invoiceNotes').value.trim();
-
-            // Construcción estética del mensaje de texto
-            let message = `*✨ ALBA DECORACIONES ✨*\n`;
-            message += `_Diseñando Espacios con Pasión y Elegancia_\n\n`;
-            message += `*Presupuesto / Orden:* ${orderNum}\n`;
-            message += `*Cliente:* ${clientName}\n`;
-            message += `*Fecha:* ${new Date().toLocaleDateString('es-DO')}\n`;
-            message += `-------------------------------------------\n\n`;
-
-            quoteItems.forEach((item, index) => {
-                const sub = item.qty * item.price;
-                message += `${index + 1}. *${item.desc}*\n`;
-                message += `   Cant: ${item.qty} x RD$ ${item.price.toLocaleString('en-US')} = *RD$ ${sub.toLocaleString('en-US')}*\n`;
-            });
-
-            message += `\n-------------------------------------------`;
-            if (totals.installCost > 0) {
-                message += `\n*Mano de Obra / Instalación:* RD$ ${totals.installCost.toLocaleString('en-US')}`;
-            }
-            if (totals.discountAmount > 0) {
-                message += `\n*Descuento (${totals.discountPercent}%):* -RD$ ${totals.discountAmount.toLocaleString('en-US')}`;
-            }
-            message += `\n*💰 TOTAL NETO A PAGAR: RD$ ${totals.absoluteTotal.toLocaleString('en-US')}*`;
-
-            if (notes) {
-                message += `\n\n*Nota aclaratoria:* ${notes}`;
-            }
-
-            message += `\n\n____________________________\n`;
-            message += `*Contacto & Redes:*\n`;
-            message += `📞 Tels: 829-263-1340 | 849-856-4191\n`;
-            message += `📸 Instagram: @Albadecoraciones.dom`;
-
-            // Encodear texto para URL de WhatsApp
-            const urlEncodedMessage = encodeURIComponent(message);
-            window.open(`https://api.whatsapp.com/send?text=${urlEncodedMessage}`, '_blank');
-        }
-
-        function generatePDFInvoice() {
-            const totals = calculateTotal();
-
-            document.getElementById('pdfClientName').innerText = document.getElementById('clientName').value.trim() || 'Cliente General';
-            document.getElementById('pdfClientPhone').innerText = document.getElementById('clientPhone').value.trim() ? 'Teléfono: ' + document.getElementById('clientPhone').value.trim() : 'Sin teléfono';
-            document.getElementById('pdfOrderId').innerText = document.getElementById('orderNumber').value.trim() || 'S/N';
-            document.getElementById('pdfDate').innerText = new Date().toLocaleDateString('es-DO');
-            document.getElementById('pdfNotes').innerText = document.getElementById('invoiceNotes').value.trim() || 'Sin observaciones adicionales.';
-            document.getElementById('pdfSummaryWindows').innerText = `Total elementos: ${quoteItems.length} líneas calculadas`;
-
-            const pdfTbody = document.getElementById('pdfTableBody');
-            pdfTbody.innerHTML = '';
-
-            quoteItems.forEach(item => {
-                const sub = item.qty * item.price;
-                const tr = document.createElement('tr');
-                tr.className = "text-[11px] text-neutral-800";
-                tr.innerHTML = `
-                    <td class="p-2 border-b border-neutral-100 font-medium">${item.desc}</td>
-                    <td class="p-2 border-b border-neutral-100 text-center">${item.qty}</td>
-                    <td class="p-2 border-b border-neutral-100 text-right">RD$ ${item.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                    <td class="p-2 border-b border-neutral-100 text-right font-bold">RD$ ${sub.toLocaleString('en-US', { minimumFractionDigits: 2 })}</td>
-                `;
-                pdfTbody.appendChild(tr);
-            });
-
-            document.getElementById('pdfInstallCost').innerText = `RD$ ${totals.installCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-            document.getElementById('pdfDiscount').innerText = `-RD$ ${totals.discountAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-            document.getElementById('pdfTotalGeneral').innerText = `RD$ ${totals.absoluteTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
-
-            const targetEl = document.getElementById('invoiceRenderTemplate');
-            targetEl.classList.remove('hidden'); 
-
-            const options = {
-                margin:       0.3,
-                filename:     `Factura_Alba_Decoraciones_${document.getElementById('orderNumber').value.trim() || 'Cotiz'}.pdf`,
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, logging: false, useCORS: true },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-            };
-
-            html2pdf().from(targetEl).set(options).save().then(() => {
-                targetEl.classList.add('hidden'); 
+            adicionales.forEach((bAd) => {
+                const nombreAd = bAd.querySelector('.a-nombre').value || "Artículo Adicional";
+                const cantAd = parseFloat(bAd.querySelector('.a-cant').value) || 0;
+                const precioAd = parseFloat(bAd.querySelector('.a-precio').value) || 0;
+                if(cantAd > 0) insertarElementoFactura(nombreAd, cantAd, precioAd, `grupo_${grupoId}`);
             });
         }
 
-        renderTable();
-    </script>
+        // 3. GENERAR SERVICIOS INDEPENDIENTES
+        const vInstalacion = parseFloat(document.getElementById('globalInstalacion').value) || 0;
+        const vManoObra = parseFloat(document.getElementById('globalManoObra').value) || 0;
+
+        if (vInstalacion > 0 || vManoObra > 0) {
+            grupoId++;
+            let tagSeparador = document.createElement('div');
+            tagSeparador.className = 'row-ventana-title-tag';
+            tagSeparador.id = `tag_grupo_${grupoId}`;
+            tagSeparador.innerHTML = `<span>SERVICIOS DEL TRABAJO</span>`;
+            contenedorFactura.appendChild(tagSeparador);
+
+            if (vInstalacion > 0) insertarElementoFactura("Servicio de Instalación Técnica", 1, vInstalacion, `grupo_${grupoId}`);
+            if (vManoObra > 0) insertarElementoFactura("Mano de Obra (Confección)", 1, vManoObra, `grupo_${grupoId}`);
+        }
+
+        ejecutarSumaGlobal();
+
+        document.getElementById('fechaFactura').innerText = `Fecha: ${new Date().toLocaleDateString()}`;
+        document.getElementById('resultadoFactura').style.display = 'block';
+        document.getElementById('printTableHeader').style.display = 'flex';
+        document.getElementById('resultadoFactura').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function quitarElementoFactura(boton) {
+        boton.closest('.factura-item-row').remove();
+        ejecutarSumaGlobal();
+    }
+
+    function quitarGrupoCompleto(idGrupo) {
+        document.querySelectorAll(`[data-pertenece="grupo_${idGrupo}"]`).forEach(el => el.remove());
+        const tag = document.getElementById(`tag_grupo_${idGrupo}`);
+        if (tag) tag.remove();
+        ejecutarSumaGlobal();
+    }
+
+    function recalcularFilaManual(inputElement, fueMontoModificado) {
+        const fila = inputElement.closest('.factura-item-row');
+        const inputCant = fila.querySelector('.val-cant');
+        const inputPrecio = fila.querySelector('.val-precio');
+        const inputMonto = fila.querySelector('.val-monto');
+
+        let cant = parseFloat(inputCant.value) || 0;
+        let precio = parseFloat(inputPrecio.value) || 0;
+        let monto = parseFloat(inputMonto.value) || 0;
+
+        if (fueMontoModificado) {
+            if (cant !== 0) {
+                precio = monto / cant;
+                inputPrecio.value = precio.toFixed(2);
+            }
+        } else {
+            monto = cant * precio;
+            inputMonto.value = monto.toFixed(2);
+        }
+        ejecutarSumaGlobal();
+    }
+
+    function ejecutarSumaGlobal() {
+        let subtotal = 0;
+        document.querySelectorAll('.val-monto').forEach(el => {
+            subtotal += parseFloat(el.value) || 0;
+        });
+
+        const descuentoPct = parseFloat(document.getElementById('globalDescuento').value) || 0;
+        const montoDescuento = subtotal * (descuentoPct / 100);
+        const totalFinal = subtotal - montoDescuento;
+
+        document.getElementById('subtotalPuro').innerText = `Subtotal Neto: RD$ ${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        document.getElementById('descuentoAplicado').innerText = `Descuento (${descuentoPct}%): -RD$ ${montoDescuento.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+        document.getElementById('totalAbsoluto').innerText = `TOTAL A PAGAR: RD$ ${totalFinal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    }
+</script>
 </body>
 </html>
