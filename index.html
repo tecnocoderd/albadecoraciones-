@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cotizador Oficial - Alba Decoraciones</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cotizador Móvil - Alba Decoraciones</title>
     <style>
         :root {
             --primary: #1e3a8a;
@@ -12,7 +12,7 @@
             --secondary-dark: #0f766e;
             --success: #16a34a;
             --danger: #dc2626;
-            --background: #f8fafc;
+            --background: #f1f5f9;
             --surface: #ffffff;
             --text: #1e293b;
             --border: #cbd5e1;
@@ -22,73 +22,67 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background-color: var(--background);
             color: var(--text);
-            padding: 15px;
-            line-height: 1.5;
-        }
-
-        @media(min-width: 768px) {
-            body { padding: 30px; }
+            padding: 10px;
+            line-height: 1.4;
+            font-size: 15px;
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
         header {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
             background: linear-gradient(135deg, var(--primary), #1d4ed8);
             color: white;
-            padding: 20px;
-            border-radius: 8px;
+            padding: 20px 15px;
+            border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
-        header h1 { font-size: 26px; margin-bottom: 5px; }
-        header p { font-size: 14px; color: #dbeafe; }
+        header h1 { font-size: 24px; margin-bottom: 4px; }
+        header p { font-size: 13px; color: #dbeafe; }
 
         .card {
             background: var(--surface);
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 12px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px solid #e2e8f0;
         }
 
-        @media(min-width: 768px) {
-            .card { padding: 25px; }
-        }
-
         .card h2 {
-            font-size: 18px;
+            font-size: 17px;
             color: var(--primary);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             border-bottom: 2px solid #f1f5f9;
-            padding-bottom: 5px;
+            padding-bottom: 6px;
         }
 
         .ventana-block {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            border-left: 4px solid var(--secondary);
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 15px;
+            border-left: 5px solid var(--secondary);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
         }
 
         .ventana-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             gap: 10px;
         }
 
@@ -100,41 +94,32 @@
             font-size: 16px;
             border-bottom: 1px dashed var(--border);
             padding: 2px;
-            width: 60%;
-        }
-
-        .ventana-title:focus {
-            outline: none;
-            border-bottom-color: var(--secondary);
+            width: 65%;
         }
 
         .btn-eliminar {
             background: #fee2e2;
             color: var(--danger);
             border: none;
-            padding: 5px 10px;
-            border-radius: 4px;
+            padding: 6px 12px;
+            border-radius: 6px;
             cursor: pointer;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: bold;
         }
 
         .grid-inputs {
             display: grid;
-            grid-template-columns: 1fr;
-            gap: 12px;
+            grid-template-columns: 1fr; /* Columna única en móviles */
+            gap: 10px;
         }
 
-        @media(min-width: 480px) {
+        /* Se expande a más columnas en tablets y computadoras */
+        @media(min-width: 580px) {
             .grid-inputs { grid-template-columns: repeat(2, 1fr); }
         }
-
         @media(min-width: 768px) {
             .grid-inputs { grid-template-columns: repeat(3, 1fr); }
-        }
-
-        @media(min-width: 1024px) {
-            .grid-inputs { grid-template-columns: repeat(4, 1fr); }
         }
 
         .form-group {
@@ -143,107 +128,116 @@
         }
 
         label {
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 700;
             margin-bottom: 4px;
             color: #475569;
+            text-transform: uppercase;
         }
 
         input, select {
-            padding: 8px 12px;
+            padding: 10px 12px; /* Más grandes para pantallas táctiles */
             border: 1px solid var(--border);
-            border-radius: 4px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 15px;
             outline: none;
             background-color: white;
+            width: 100%;
         }
 
         input:focus, select:focus {
             border-color: var(--secondary);
+            background-color: #fff;
         }
 
         .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 14px;
-            font-weight: 600;
-            border-radius: 4px;
+            display: block;
+            padding: 12px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 8px;
             cursor: pointer;
             text-align: center;
             border: none;
             transition: background 0.2s;
             width: 100%;
+            margin-bottom: 8px;
         }
 
         .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-dark); }
         .btn-secondary { background: var(--secondary); color: white; }
-        .btn-secondary:hover { background: var(--secondary-dark); }
         .btn-success { background: var(--success); color: white; font-size: 16px; }
 
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
+        /* DISEÑO DE TABLA ADAPTADA A CELULARES (RESPONSIVE TOTAL) */
+        .factura-lista {
             margin-top: 15px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-            min-width: 600px;
+        .factura-item-row {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
 
-        th, td {
-            padding: 10px 12px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-            font-size: 13px;
-        }
-
-        th {
-            background: #f1f5f9;
-            color: var(--primary);
-            font-weight: 700;
-        }
-
-        .row-ventana-header {
-            background: #e2e8f0;
+        .factura-item-header {
             font-weight: bold;
+            font-size: 14px;
+            color: var(--text);
         }
 
-        .editable-cell-input {
-            width: 100%;
-            border: 1px solid transparent;
-            background: transparent;
-            padding: 4px;
+        .factura-item-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            align-items: center;
+        }
+
+        .factura-item-grid div {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .factura-item-grid label {
+            font-size: 9px;
+            color: #64748b;
+            margin-bottom: 2px;
+        }
+
+        .factura-item-grid input {
+            padding: 6px;
             font-size: 13px;
-            color: inherit;
-        }
-        
-        .editable-cell-input:hover {
-            border-color: var(--border);
-            background: #fff;
+            border-radius: 4px;
+            text-align: center;
         }
 
-        .editable-cell-input:focus {
-            border-color: var(--secondary);
-            background: #fff;
-            outline: none;
+        .row-ventana-title-tag {
+            background: #e2e8f0;
+            color: var(--primary);
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 13px;
+            margin-top: 15px;
+            margin-bottom: 8px;
         }
 
         .total-box {
             text-align: right;
-            font-size: 16px;
-            margin-top: 5px;
+            font-size: 15px;
+            margin-top: 6px;
             font-weight: 600;
         }
 
         .total-final {
-            font-size: 22px;
+            font-size: 20px;
             color: var(--primary);
             font-weight: bold;
-            border-top: 2px solid var(--primary);
+            border-top: 2px dashed var(--primary);
             padding-top: 10px;
             margin-top: 10px;
         }
@@ -254,29 +248,44 @@
 
         .info-empresa {
             border-bottom: 2px solid var(--primary);
-            padding-bottom: 15px;
-            margin-bottom: 15px;
+            padding-bottom: 12px;
+            margin-bottom: 12px;
         }
 
-        .info-empresa h2 { color: var(--primary); margin-bottom: 5px; }
-        .info-empresa p { font-size: 13px; color: #475569; }
+        .info-empresa h2 { color: var(--primary); margin-bottom: 4px; font-size: 20px; }
+        .info-empresa p { font-size: 12px; color: #475569; }
 
         .indicador-edicion {
             background: #eff6ff;
             color: #1e40af;
             font-size: 12px;
-            padding: 8px;
-            border-radius: 4px;
-            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
             font-weight: 500;
         }
 
+        /* AJUSTES EXCLUSIVOS DE IMPRESIÓN / PDF */
         @media print {
             .no-print { display: none !important; }
             body { background: white; padding: 0; }
             .card { border: none; box-shadow: none; padding: 0; }
             #resultadoFactura { display: block !important; }
-            .editable-cell-input { border: none !important; background: transparent !important; padding: 0; }
+            
+            /* En el PDF impreso vuelve a verse compacto */
+            .factura-item-row { 
+                flex-direction: row; 
+                justify-content: space-between;
+                border: none;
+                border-bottom: 1px solid #cbd5e1;
+                border-radius: 0;
+                padding: 6px 0;
+                margin: 0;
+            }
+            .factura-item-header { width: 40%; font-size: 12px; }
+            .factura-item-grid { width: 60%; grid-template-columns: repeat(3, 1fr); }
+            .factura-item-grid input { border: none !important; background: transparent !important; pointer-events: none; }
+            .factura-item-grid label { display: none; }
         }
     </style>
 </head>
@@ -285,25 +294,24 @@
 <div class="container">
     <header class="no-print">
         <h1>Alba Decoraciones</h1>
-        <p>Sistema Profesional de Cotización de Cortinas</p>
+        <p>Cotizador Móvil Avanzado</p>
     </header>
 
+    <!-- 1. FORMULARIO DE ENTRADA -->
     <div class="card no-print">
         <h2>1. Configuración de Ventanas</h2>
         <div id="ventanasContenedor"></div>
         
-        <button class="btn btn-primary" style="width: auto; margin-bottom: 20px;" onclick="agregarVentana()">+ Agregar Ventana</button>
+        <button class="btn btn-primary" onclick="agregarVentana()">+ Agregar Ventana</button>
 
-        <h2>2. Artículos Adicionales</h2>
-        <div id="adicionalesContenedor" style="margin-bottom: 15px;"></div>
+        <h2 style="margin-top: 15px;">2. Artículos Adicionales</h2>
+        <div id="adicionalesContenedor" style="margin-bottom: 10px;"></div>
         
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
-            <button class="btn btn-secondary" style="width: auto; background-color: #4b5563;" onclick="agregarAdicionalRapido('Bastón de 36 cm', 390)">+ Bastón 36cm (RD$390)</button>
-            <button class="btn btn-secondary" style="width: auto; background-color: #4b5563;" onclick="agregarAdicionalRapido('Bastón de 60 cm', 500)">+ Bastón 60cm (RD$500)</button>
-            <button class="btn btn-secondary" style="width: auto; background-color: #6b7280;" onclick="agregarAdicionalCampoPersonalizado()">+ Otro Artículo</button>
-        </div>
+        <button class="btn btn-secondary" style="background-color: #4b5563;" onclick="agregarAdicionalRapido('Bastón de 36 cm', 390)">+ Bastón 36cm (RD$390)</button>
+        <button class="btn btn-secondary" style="background-color: #4b5563;" onclick="agregarAdicionalRapido('Bastón de 60 cm', 500)">+ Bastón 60cm (RD$500)</button>
+        <button class="btn btn-secondary" style="background-color: #6b7280;" onclick="agregarAdicionalCampoPersonalizado()">+ Otro Artículo</button>
 
-        <h2>3. Servicios del Trabajo y Descuento</h2>
+        <h2 style="margin-top: 15px;">3. Servicios del Trabajo</h2>
         <div class="grid-inputs">
             <div class="form-group">
                 <label>Instalación (RD$)</label>
@@ -323,41 +331,32 @@
             </div>
         </div>
 
-        <button class="btn btn-secondary" style="margin-top: 20px;" onclick="calcularPresupuesto()">Generar Factura</button>
+        <button class="btn btn-secondary" style="margin-top: 20px; padding: 14px;" onclick="calcularPresupuesto()">Generar Factura</button>
     </div>
 
+    <!-- 2. VISTA DE FACTURA ADAPTADA A PANTALLAS MÓVILES -->
     <div id="resultadoFactura" class="card">
         <div class="info-empresa">
             <h2>Alba Decoraciones</h2>
             <p><strong>Teléfonos:</strong> 829 263 1340 | 849 856 4191</p>
             <p><strong>Instagram:</strong> @Albadecoraciones.dom</p>
-            <p id="fechaFactura"></p>
+            <p id="fechaFactura" style="margin-top: 4px; font-weight: bold;"></p>
         </div>
 
         <div class="indicador-edicion no-print">
-            💡 <strong>Modo de Edición Manual Activado:</strong> Si deseas realizar ajustes finos de última hora, puedes hacer clic y cambiar libremente cualquier descripción, cantidad, precio unitario o monto directamente sobre las celdas de la tabla. Los totales se calcularán de forma inmediata.
+            💡 <strong>Sugerencia Táctil:</strong> En los cuadros de abajo puedes presionar y corregir cantidades o precios directamente con el teclado del celular si necesitas reajustar algo.
         </div>
 
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 40%;">Descripción del Material / Servicio</th>
-                        <th style="width: 15%;">Cantidad / Medida</th>
-                        <th style="width: 25%;">Precio Unitario (RD$)</th>
-                        <th style="width: 20%;">Monto Final (RD$)</th>
-                    </tr>
-                </thead>
-                <tbody id="tablaCuerpo">
-                    </tbody>
-            </table>
+        <!-- Contenedor adaptivo para reemplazo de tabla -->
+        <div id="facturaListaContenedor" class="factura-lista">
+            <!-- Se genera dinámicamente -->
         </div>
 
         <div class="total-box" id="subtotalPuro">Subtotal Neto: RD$ 0.00</div>
         <div class="total-box" id="descuentoAplicado" style="color: var(--danger);">Descuento: -RD$ 0.00</div>
         <div class="total-box total-final" id="totalAbsoluto">TOTAL A PAGAR: RD$ 0.00</div>
 
-        <button class="btn btn-success no-print" style="margin-top: 25px;" onclick="window.print()">📄 Guardar como PDF / Imprimir Factura</button>
+        <button class="btn btn-success no-print" style="margin-top: 25px; padding: 14px;" onclick="window.print()">📄 Guardar como PDF / Imprimir</button>
     </div>
 </div>
 
@@ -373,6 +372,11 @@
         { pies: 16, cm: 16 * CM_POR_PIE, precio: 1450 }
     ];
 
+    // Cargar una ventana por defecto al abrir la app
+    window.onload = function() {
+        agregarVentana();
+    };
+
     function agregarVentana() {
         contadorVentanas++;
         const contenedor = document.getElementById('ventanasContenedor');
@@ -383,7 +387,7 @@
         div.innerHTML = `
             <div class="ventana-header">
                 <input type="text" class="ventana-title" value="Ventana #${contadorVentanas}">
-                <button class="btn-eliminar" onclick="eliminarVentana(${contadorVentanas})">Eliminar</button>
+                <button class="btn-eliminar" onclick="eliminarVentana(${contadorVentanas})">X</button>
             </div>
             <div class="grid-inputs">
                 <div class="form-group">
@@ -398,18 +402,18 @@
                     <label>Tipo de Barra</label>
                     <select class="v-barra-config" onchange="actualizarInterfazBarra(this)">
                         <option value="simple">Barra Simple</option>
-                        <option value="doble">Barra Doble (Visillo + Blackout)</option>
+                        <option value="doble">Barra Doble</option>
                     </select>
                 </div>
                 <div class="form-group v-tela-container">
-                    <label>Tipo de Tela (Si es barra simple)</label>
+                    <label>Tipo de Tela</label>
                     <select class="v-tela">
                         <option value="300">Visillo (RD$ 300)</option>
                         <option value="480">Blackout (RD$ 480)</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Confección / Carrito</label>
+                    <label>Confección</label>
                     <select class="v-confeccion">
                         <option value="ondas">Ondas</option>
                         <option value="tachones">Tachones</option>
@@ -435,20 +439,20 @@
         div.innerHTML = `
             <div class="ventana-header">
                 <span style="font-size:13px; font-weight:bold; color:#4b5563;">${nombre}</span>
-                <button class="btn-eliminar" onclick="eliminarAdicional(${contadorAdicionales})">Eliminar</button>
+                <button class="btn-eliminar" onclick="eliminarAdicional(${contadorAdicionales})">X</button>
             </div>
-            <div class="grid-inputs" style="grid-template-columns: 2fr 1fr 1fr;">
+            <div class="grid-inputs">
                 <div class="form-group">
-                    <label>Nombre / Descripción</label>
+                    <label>Artículo</label>
                     <input type="text" class="a-nombre" value="${nombre}" readonly style="background:#e2e8f0;">
                 </div>
                 <div class="form-group">
                     <label>Cantidad</label>
-                    <input type="number" class="a-cant" value="1" min="1" required>
+                    <input type="number" class="a-cant" value="1" min="1">
                 </div>
                 <div class="form-group">
-                    <label>Precio Unidad (RD$)</label>
-                    <input type="number" class="a-precio" value="${precio}" min="0" required>
+                    <label>Precio Unitario</label>
+                    <input type="number" class="a-precio" value="${precio}">
                 </div>
             </div>
         `;
@@ -465,21 +469,21 @@
         
         div.innerHTML = `
             <div class="ventana-header">
-                <span style="font-size:13px; font-weight:bold; color:#6b7280;">Artículo Personalizado</span>
-                <button class="btn-eliminar" onclick="eliminarAdicional(${contadorAdicionales})">Eliminar</button>
+                <span style="font-size:13px; font-weight:bold; color:#6b7280;">Artículo Adicional</span>
+                <button class="btn-eliminar" onclick="eliminarAdicional(${contadorAdicionales})">X</button>
             </div>
-            <div class="grid-inputs" style="grid-template-columns: 2fr 1fr 1fr;">
+            <div class="grid-inputs">
                 <div class="form-group">
-                    <label>Nombre / Descripción</label>
-                    <input type="text" class="a-nombre" placeholder="Ej. Velcro, Galerías..." required>
+                    <label>Descripción</label>
+                    <input type="text" class="a-nombre" placeholder="Nombre del artículo" required>
                 </div>
                 <div class="form-group">
                     <label>Cantidad</label>
-                    <input type="number" class="a-cant" value="1" min="1" required>
+                    <input type="number" class="a-cant" value="1" min="1">
                 </div>
                 <div class="form-group">
-                    <label>Precio Unidad (RD$)</label>
-                    <input type="number" class="a-precio" value="0" min="0" required>
+                    <label>Precio Unitario</label>
+                    <input type="number" class="a-precio" value="0">
                 </div>
             </div>
         `;
@@ -494,7 +498,7 @@
         const bloque = selectElement.closest('.ventana-block');
         const telaContainer = bloque.querySelector('.v-tela-container');
         if (selectElement.value === 'doble') {
-            telaContainer.style.opacity = '0.5';
+            telaContainer.style.opacity = '0.4';
             bloque.querySelector('.v-tela').disabled = true;
         } else {
             telaContainer.style.opacity = '1';
@@ -504,23 +508,34 @@
 
     function calcularPresupuesto() {
         const bloques = document.querySelectorAll('.ventana-block:not([id^="adicional_"])');
-        const tbody = document.getElementById('tablaCuerpo');
-        tbody.innerHTML = '';
+        const contenedorFactura = document.getElementById('facturaListaContenedor');
+        contenedorFactura.innerHTML = '';
 
-        function agregarFilaEditable(descripcion, cantidad, precioUnitario) {
-            const tr = document.createElement('tr');
-            tr.className = 'item-calculado-row';
+        function insertarElementoFactura(descripcion, cantidad, precioUnitario) {
+            const divItem = document.createElement('div');
+            divItem.className = 'factura-item-row';
             
-            tr.innerHTML = `
-                <td><input type="text" class="editable-cell-input val-desc" value="${descripcion}"></td>
-                <td><input type="number" class="editable-cell-input val-cant" value="${cantidad}" step="any" oninput="recalcularTotalesDesdeTabla()"></td>
-                <td><input type="number" class="editable-cell-input val-precio" value="${precioUnitario}" step="any" oninput="recalcularTotalesDesdeTabla()"></td>
-                <td><input type="number" class="editable-cell-input val-monto" value="${(cantidad * precioUnitario).toFixed(2)}" step="any" oninput="recalcularTotalesDesdeTabla(true)"></td>
+            divItem.innerHTML = `
+                <div class="factura-item-header">${descripcion}</div>
+                <div class="factura-item-grid">
+                    <div>
+                        <label>Cantidad</label>
+                        <input type="number" class="val-cant" value="${cantidad}" step="any" oninput="recalcularMantenimientoMovil(this, false)">
+                    </div>
+                    <div>
+                        <label>Precio Unitario</label>
+                        <input type="number" class="val-precio" value="${precioUnitario}" step="any" oninput="recalcularMantenimientoMovil(this, false)">
+                    </div>
+                    <div>
+                        <label>Monto Total</label>
+                        <input type="number" class="val-monto" value="${(cantidad * precioUnitario).toFixed(2)}" step="any" oninput="recalcularMantenimientoMovil(this, true)">
+                    </div>
+                </div>
             `;
-            tbody.appendChild(tr);
+            contenedorFactura.appendChild(divItem);
         }
 
-        // 1. PROCESAR CADA VENTANA
+        // 1. GENERAR VENTANAS
         bloques.forEach((bloque) => {
             const nombre = bloque.querySelector('.ventana-title').value;
             const ancho = parseFloat(bloque.querySelector('.v-ancho').value) || 0;
@@ -541,123 +556,104 @@
                     break;
                 }
             }
-            if (!barraSeleccionada) {
-                barraSeleccionada = BARRAS[BARRAS.length - 1];
-            }
-
-            if (ancho === 103 && largo === 154) {
-                barraSeleccionada = BARRAS.find(b => b.pies === 14);
-            }
+            if (!barraSeleccionada) barraSeleccionada = BARRAS[BARRAS.length - 1];
+            if (ancho === 103 && largo === 154) barraSeleccionada = BARRAS.find(b => b.pies === 14);
 
             const cantidadDeBarras = esDobleBarra ? 2 : 1;
-
-            let yardasTelaBase = (ancho / 103) * 7;
-            if (ancho === 103 && largo === 154) {
-                yardasTelaBase = 7;
-            }
+            let yardasTelaBase = (ancho === 103 && largo === 154) ? 7 : (ancho / 103) * 7;
             let yardasTelaFinal = Math.ceil(yardasTelaBase * 2);
 
-            let filaCabecera = document.createElement('tr');
-            filaCabecera.className = 'row-ventana-header';
-            filaCabecera.innerHTML = `<td colspan="4">${nombre.toUpperCase()} (${ancho}x${largo} cm) - Confección: ${tipoConfeccion.toUpperCase()}</td>`;
-            tbody.appendChild(filaCabecera);
+            let tagSeparador = document.createElement('div');
+            tagSeparador.className = 'row-ventana-title-tag';
+            tagSeparador.innerText = `${nombre.toUpperCase()} (${ancho}x${largo} cm) - Confección: ${tipoConfeccion.toUpperCase()}`;
+            contenedorFactura.appendChild(tagSeparador);
 
-            agregarFilaEditable(`Barra de ${barraSeleccionada.pies} Pies`, cantidadDeBarras, barraSeleccionada.precio);
+            insertarElementoFactura(`Barra de ${barraSeleccionada.pies} Pies`, cantidadDeBarras, barraSeleccionada.precio);
 
             if (esDobleBarra) {
-                agregarFilaEditable('Tela Visillo (Calculado x2)', yardasTelaFinal, 300);
-                agregarFilaEditable('Tela Blackout (Calculado x2)', yardasTelaFinal, 480);
+                insertarElementoFactura('Tela Visillo (Calculado x2)', yardasTelaFinal, 300);
+                insertarElementoFactura('Tela Blackout (Calculado x2)', yardasTelaFinal, 480);
             } else {
                 let nombreTela = (precioTelaIndividual === 480) ? "Tela Blackout (Calculado x2)" : "Tela Visillo (Calculado x2)";
-                agregarFilaEditable(nombreTela, yardasTelaFinal, precioTelaIndividual);
+                insertarElementoFactura(nombreTela, yardasTelaFinal, precioTelaIndividual);
             }
 
             if (esOndas) {
-                let yardasCarrito = Math.ceil((ancho / 103) * 9);
-                if (ancho === 103 && largo === 154) yardasCarrito = 9;
-
+                let yardasCarrito = (ancho === 103 && largo === 154) ? 9 : Math.ceil((ancho / 103) * 9);
                 let precioSoporte = esDobleBarra ? 700 : 500;
 
-                agregarFilaEditable('Carritos Ondas', yardasCarrito, 175);
-                agregarFilaEditable('Cinta Transparente', yardasTelaFinal, 120);
-                agregarFilaEditable('Cinta de Broche', yardasTelaFinal, 120);
-                agregarFilaEditable('Soportes y Terminales Juego', 1, precioSoporte);
+                insertarElementoFactura('Carritos Ondas', yardasCarrito, 175);
+                insertarElementoFactura('Cinta Transparente', yardasTelaFinal, 120);
+                insertarElementoFactura('Cinta de Broche', yardasTelaFinal, 120);
+                insertarElementoFactura('Soportes y Terminales Juego', 1, precioSoporte);
             } else {
                 let precioSoporte = esDobleBarra ? 700 : 500;
-                agregarFilaEditable('Carritos Tachones (Paquete de 100)', 1, 350);
-                agregarFilaEditable('Ganchos Tachones (Paquete de 100)', 1, 70);
-                agregarFilaEditable('Soportes y Terminales Juego', 1, precioSoporte);
+                insertarElementoFactura('Carritos Tachones (Paquete 100)', 1, 350);
+                insertarElementoFactura('Ganchos Tachones (Paquete 100)', 1, 70);
+                insertarElementoFactura('Soportes y Terminales Juego', 1, precioSoporte);
             }
         });
 
-        // 2. PROCESAR ARTÍCULOS ADICIONALES
-        const bloquesAdicionales = document.querySelectorAll('[id^="adicional_"]');
-        if (bloquesAdicionales.length > 0) {
-            let filaAdicionalHeader = document.createElement('tr');
-            filaAdicionalHeader.className = 'row-ventana-header';
-            filaAdicionalHeader.innerHTML = `<td colspan="4">Artículos Adicionales Agregados</td>`;
-            tbody.appendChild(filaAdicionalHeader);
+        // 2. GENERAR ADICIONALES
+        const adicionales = document.querySelectorAll('[id^="adicional_"]');
+        if (adicionales.length > 0) {
+            let tagSeparador = document.createElement('div');
+            tagSeparador.className = 'row-ventana-title-tag';
+            tagSeparador.innerText = `ARTÍCULOS ADICIONALES`;
+            contenedorFactura.appendChild(tagSeparador);
 
-            bloquesAdicionales.forEach((bAd) => {
+            adicionales.forEach((bAd) => {
                 const nombreAd = bAd.querySelector('.a-nombre').value || "Artículo Adicional";
                 const cantAd = parseFloat(bAd.querySelector('.a-cant').value) || 0;
                 const precioAd = parseFloat(bAd.querySelector('.a-precio').value) || 0;
-                if(cantAd > 0) {
-                    agregarFilaEditable(nombreAd, cantAd, precioAd);
-                }
+                if(cantAd > 0) insertarElementoFactura(nombreAd, cantAd, precioAd);
             });
         }
 
-        // 3. PROCESAR SERVICIOS (INSTALACIÓN, LAVANDERÍA, MANO DE OBRA) POR SEPARADO
+        // 3. GENERAR SERVICIOS INDEPENDIENTES
         const vInstalacion = parseFloat(document.getElementById('globalInstalacion').value) || 0;
         const vLavanderia = parseFloat(document.getElementById('globalLavanderia').value) || 0;
         const vManoObra = parseFloat(document.getElementById('globalManoObra').value) || 0;
 
         if (vInstalacion > 0 || vLavanderia > 0 || vManoObra > 0) {
-            let filaServicioHeader = document.createElement('tr');
-            filaServicioHeader.className = 'row-ventana-header';
-            filaServicioHeader.innerHTML = `<td colspan="4">Servicios Especiales del Trabajo</td>`;
-            tbody.appendChild(filaServicioHeader);
+            let tagSeparador = document.createElement('div');
+            tagSeparador.className = 'row-ventana-title-tag';
+            tagSeparador.innerText = `SERVICIOS DEL TRABAJO`;
+            contenedorFactura.appendChild(tagSeparador);
 
-            if (vInstalacion > 0) {
-                agregarFilaEditable("Servicio de Instalación Técnica", 1, vInstalacion);
-            }
-            if (vLavanderia > 0) {
-                agregarFilaEditable("Servicio Especializado de Lavandería", 1, vLavanderia);
-            }
-            if (vManoObra > 0) {
-                agregarFilaEditable("Costo por Mano de Obra (Confección)", 1, vManoObra);
-            }
+            if (vInstalacion > 0) insertarElementoFactura("Servicio de Instalación Técnica", 1, vInstalacion);
+            if (vLavanderia > 0) insertarElementoFactura("Servicio Especializado de Lavandería", 1, vLavanderia);
+            if (vManoObra > 0) insertarElementoFactura("Costo por Mano de Obra (Confección)", 1, vManoObra);
         }
 
-        recalcularTotalesDesdeTabla();
+        ejecutarSumaGlobal();
 
-        document.getElementById('fechaFactura').innerText = `Fecha de Emisión: ${new Date().toLocaleDateString()}`;
+        document.getElementById('fechaFactura').innerText = `Fecha: ${new Date().toLocaleDateString()}`;
         document.getElementById('resultadoFactura').style.display = 'block';
         document.getElementById('resultadoFactura').scrollIntoView({ behavior: 'smooth' });
     }
 
-    function recalcularTotalesDesdeTabla(montoModificadoManualmente = false) {
-        const filas = document.querySelectorAll('.item-calculado-row');
+    function recalcularMantenimientoMovil(inputElement, fueMontoModificado) {
+        const grid = inputElement.closest('.factura-item-grid');
+        const inputCant = grid.querySelector('.val-cant');
+        const inputPrecio = grid.querySelector('.val-precio');
+        const inputMonto = grid.querySelector('.val-monto');
+
+        let cant = parseFloat(inputCant.value) || 0;
+        let precio = parseFloat(inputPrecio.value) || 0;
+
+        if (!fueMontoModificado) {
+            inputMonto.value = (cant * precio).toFixed(2);
+        }
+        ejecutarSumaGlobal();
+    }
+
+    function ejecutarSumaGlobal() {
+        const montos = document.querySelectorAll('.val-monto');
         let sumaSubtotals = 0;
 
-        filas.forEach((fila) => {
-            const inputCant = fila.querySelector('.val-cant');
-            const inputPrecio = fila.querySelector('.val-precio');
-            const inputMonto = fila.querySelector('.val-monto');
-
-            let cant = parseFloat(inputCant.value) || 0;
-            let precio = parseFloat(inputPrecio.value) || 0;
-            let monto = parseFloat(inputMonto.value) || 0;
-
-            if (!montoModificadoManualmente) {
-                monto = cant * precio;
-                inputMonto.value = monto.toFixed(2);
-            } else {
-                monto = parseFloat(inputMonto.value) || 0;
-            }
-
-            sumaSubtotals += monto;
+        montos.forEach((inputMonto) => {
+            sumaSubtotals += parseFloat(inputMonto.value) || 0;
         });
 
         const vDescuentoPorcentaje = parseFloat(document.getElementById('globalDescuento').value) || 0;
