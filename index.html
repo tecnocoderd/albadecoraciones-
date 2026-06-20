@@ -134,7 +134,7 @@
         }
 
         @media(min-width: 1024px) {
-            .grid-inputs { grid-template-columns: repeat(5, 1fr); }
+            .grid-inputs { grid-template-columns: repeat(4, 1fr); }
         }
 
         .form-group {
@@ -303,11 +303,19 @@
             <button class="btn btn-secondary" style="width: auto; background-color: #6b7280;" onclick="agregarAdicionalCampoPersonalizado()">+ Otro Artículo</button>
         </div>
 
-        <h2>3. Mano de Obra, Instalación y Descuento</h2>
+        <h2>3. Servicios del Trabajo y Descuento</h2>
         <div class="grid-inputs">
             <div class="form-group">
-                <label>Instalación, Lavandería y M.O (RD$)</label>
+                <label>Instalación (RD$)</label>
                 <input type="number" id="globalInstalacion" value="0" min="0">
+            </div>
+            <div class="form-group">
+                <label>Lavandería (RD$)</label>
+                <input type="number" id="globalLavanderia" value="0" min="0">
+            </div>
+            <div class="form-group">
+                <label>Mano de Obra (RD$)</label>
+                <input type="number" id="globalManoObra" value="0" min="0">
             </div>
             <div class="form-group">
                 <label>Descuento (%)</label>
@@ -334,7 +342,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th style="width: 40%;">Descripción del Material</th>
+                        <th style="width: 40%;">Descripción del Material / Servicio</th>
                         <th style="width: 15%;">Cantidad / Medida</th>
                         <th style="width: 25%;">Precio Unitario (RD$)</th>
                         <th style="width: 20%;">Monto Final (RD$)</th>
@@ -512,7 +520,7 @@
             tbody.appendChild(tr);
         }
 
-        // 1. PROCESAR CADA VENTANA INTRODUCIDA
+        // 1. PROCESAR CADA VENTANA
         bloques.forEach((bloque) => {
             const nombre = bloque.querySelector('.ventana-title').value;
             const ancho = parseFloat(bloque.querySelector('.v-ancho').value) || 0;
@@ -526,7 +534,6 @@
             const esDobleBarra = (barraConfig === 'doble');
             const esOndas = (tipoConfeccion === 'ondas');
 
-            // Selección de barra basándose estrictamente en cm
             let barraSeleccionada = null;
             for (let b of BARRAS) {
                 if (b.cm > ancho) {
@@ -535,33 +542,28 @@
                 }
             }
             if (!barraSeleccionada) {
-                barraSeleccionada = BARRAS[BARRAS.length - 1]; // Barra de 16 por defecto si supera el límite
+                barraSeleccionada = BARRAS[BARRAS.length - 1];
             }
 
-            // Calibración estricta para tu ejemplo de 103x154 cm
             if (ancho === 103 && largo === 154) {
                 barraSeleccionada = BARRAS.find(b => b.pies === 14);
             }
 
             const cantidadDeBarras = esDobleBarra ? 2 : 1;
 
-            // Determinación de yardas (Multiplicado por 2 según regla de tela)
             let yardasTelaBase = (ancho / 103) * 7;
             if (ancho === 103 && largo === 154) {
                 yardasTelaBase = 7;
             }
             let yardasTelaFinal = Math.ceil(yardasTelaBase * 2);
 
-            // Título de la sección de la ventana en la tabla
             let filaCabecera = document.createElement('tr');
             filaCabecera.className = 'row-ventana-header';
             filaCabecera.innerHTML = `<td colspan="4">${nombre.toUpperCase()} (${ancho}x${largo} cm) - Confección: ${tipoConfeccion.toUpperCase()}</td>`;
             tbody.appendChild(filaCabecera);
 
-            // Insertar Barra comercial
             agregarFilaEditable(`Barra de ${barraSeleccionada.pies} Pies`, cantidadDeBarras, barraSeleccionada.precio);
 
-            // Insertar Telas
             if (esDobleBarra) {
                 agregarFilaEditable('Tela Visillo (Calculado x2)', yardasTelaFinal, 300);
                 agregarFilaEditable('Tela Blackout (Calculado x2)', yardasTelaFinal, 480);
@@ -570,7 +572,6 @@
                 agregarFilaEditable(nombreTela, yardasTelaFinal, precioTelaIndividual);
             }
 
-            // Insertar Accesorios según Confección (Ondas vs Tachones)
             if (esOndas) {
                 let yardasCarrito = Math.ceil((ancho / 103) * 9);
                 if (ancho === 103 && largo === 154) yardasCarrito = 9;
@@ -589,7 +590,7 @@
             }
         });
 
-        // 2. PROCESAR ARTÍCULOS ADICIONALES (BASTONES U OTROS)
+        // 2. PROCESAR ARTÍCULOS ADICIONALES
         const bloquesAdicionales = document.querySelectorAll('[id^="adicional_"]');
         if (bloquesAdicionales.length > 0) {
             let filaAdicionalHeader = document.createElement('tr');
@@ -607,15 +608,26 @@
             });
         }
 
-        // 3. PROCESAR INSTALACIÓN / MANO DE OBRA GLOBAL
+        // 3. PROCESAR SERVICIOS (INSTALACIÓN, LAVANDERÍA, MANO DE OBRA) POR SEPARADO
         const vInstalacion = parseFloat(document.getElementById('globalInstalacion').value) || 0;
-        if (vInstalacion > 0) {
+        const vLavanderia = parseFloat(document.getElementById('globalLavanderia').value) || 0;
+        const vManoObra = parseFloat(document.getElementById('globalManoObra').value) || 0;
+
+        if (vInstalacion > 0 || vLavanderia > 0 || vManoObra > 0) {
             let filaServicioHeader = document.createElement('tr');
             filaServicioHeader.className = 'row-ventana-header';
-            filaServicioHeader.innerHTML = `<td colspan="4">Mano de Obra y Logística</td>`;
+            filaServicioHeader.innerHTML = `<td colspan="4">Servicios Especiales del Trabajo</td>`;
             tbody.appendChild(filaServicioHeader);
 
-            agregarFilaEditable("Instalación, Lavandería y Mano de Obra", 1, vInstalacion);
+            if (vInstalacion > 0) {
+                agregarFilaEditable("Servicio de Instalación Técnica", 1, vInstalacion);
+            }
+            if (vLavanderia > 0) {
+                agregarFilaEditable("Servicio Especializado de Lavandería", 1, vLavanderia);
+            }
+            if (vManoObra > 0) {
+                agregarFilaEditable("Costo por Mano de Obra (Confección)", 1, vManoObra);
+            }
         }
 
         recalcularTotalesDesdeTabla();
