@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Cotizador Móvil - Alba Decoraciones</title>
+    <title>Cotizador Alba Decoraciones</title>
     <style>
         :root {
             --primary: #1e3a8a;
@@ -146,7 +146,7 @@
             text-transform: uppercase;
         }
 
-        input, select {
+        input, select, textarea {
             padding: 10px 12px;
             border: 1px solid var(--border);
             border-radius: 8px;
@@ -156,7 +156,7 @@
             width: 100%;
         }
 
-        input:focus, select:focus {
+        input:focus, select:focus, textarea:focus {
             border-color: var(--secondary);
             background-color: #fff;
         }
@@ -179,7 +179,7 @@
         .btn-secondary { background: var(--secondary); color: white; }
         .btn-success { background: var(--success); color: white; font-size: 16px; }
 
-        /* DISEÑO DE FACTURA ADAPTADA A CELULARES */
+        /* DISEÑO DE FACTURA INTERACTIVA MÓVIL */
         .factura-lista {
             margin-top: 15px;
         }
@@ -207,6 +207,12 @@
             font-size: 14px;
             color: var(--text);
             flex-grow: 1;
+            border: none;
+            background: transparent;
+            border-bottom: 1px dashed transparent;
+        }
+        .factura-item-header:focus {
+            border-bottom: 1px dashed var(--secondary);
         }
 
         .factura-item-grid {
@@ -303,29 +309,67 @@
             font-weight: 500;
         }
 
-        /* AJUSTES EXCLUSIVOS DE IMPRESIÓN / PDF */
+        /* Sección de Notas Finales */
+        .nota-container {
+            margin-top: 15px;
+            border-top: 1px dashed var(--border);
+            padding-top: 10px;
+        }
+        .nota-preview-factura {
+            font-size: 13px;
+            color: #334155;
+            background: #f8fafc;
+            padding: 8px;
+            border-left: 3px solid var(--primary);
+            border-radius: 0 4px 4px 0;
+            white-space: pre-wrap;
+            margin-top: 5px;
+        }
+
+        /* AJUSTES EXCLUSIVOS DE IMPRESIÓN / EXPORTACIÓN PDF PROFESIONAL */
         @media print {
             .no-print { display: none !important; }
-            body { background: white; padding: 0; }
-            .card { border: none; box-shadow: none; padding: 0; }
+            body { background: white; padding: 0; color: black; font-size: 12px; }
+            .card { border: none; box-shadow: none; padding: 0; margin: 0; }
             #resultadoFactura { display: block !important; }
-            .info-cliente-factura { background: transparent; }
+            .info-cliente-factura { background: transparent; border: 1px solid #cbd5e1; padding: 6px; }
             .btn-eliminar-item { display: none !important; }
             
             .factura-item-row { 
                 flex-direction: row; 
                 justify-content: space-between;
                 border: none;
-                border-bottom: 1px solid #cbd5e1;
+                border-bottom: 1px solid #94a3b8;
                 border-radius: 0;
-                padding: 6px 0;
+                padding: 4px 0;
                 margin: 0;
+                gap: 0;
             }
-            .factura-item-top { width: 40%; }
-            .factura-item-header { font-size: 12px; }
-            .factura-item-grid { width: 60%; grid-template-columns: repeat(3, 1fr); }
-            .factura-item-grid input { border: none !important; background: transparent !important; pointer-events: none; }
+            .factura-item-top { width: 45%; }
+            .factura-item-header { font-size: 12px; font-weight: normal; color: black; border-bottom: none !important; }
+            .factura-item-grid { width: 55%; grid-template-columns: repeat(3, 1fr); gap: 0; }
+            .factura-item-grid input { border: none !important; background: transparent !important; pointer-events: none; color: black; font-size: 12px; text-align: right; width: 100%; padding-right: 5px; }
             .factura-item-grid label { display: none; }
+            
+            .row-ventana-title-tag {
+                background: #f1f5f9 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+                color: black;
+                padding: 4px 6px;
+                font-size: 12px;
+                border-bottom: 1px solid #64748b;
+                margin-top: 10px;
+                margin-bottom: 4px;
+            }
+            .nota-preview-factura { background: transparent; border-left: 2px solid black; padding: 0 0 0 8px; margin-top: 5px; font-size: 11px; }
+            .total-box { font-size: 13px; margin-top: 3px; }
+            .total-final { font-size: 16px; margin-top: 6px; padding-top: 6px; }
+            
+            @page {
+                size: auto;
+                margin: 12mm 12mm 12mm 12mm;
+            }
         }
     </style>
 </head>
@@ -334,9 +378,10 @@
 <div class="container">
     <header class="no-print">
         <h1>Alba Decoraciones</h1>
-        <p>Cotizador Móvil Avanzado</p>
+        <p>Cotizador de Materiales Avanzado</p>
     </header>
 
+    <!-- FORMULARIO DE ENTRADA -->
     <div class="card no-print">
         <h2>0. Información del Cliente</h2>
         <div class="grid-inputs" style="margin-bottom: 15px;">
@@ -373,11 +418,7 @@
                 <input type="number" id="globalInstalacion" value="0" min="0">
             </div>
             <div class="form-group">
-                <label>Lavandería (RD$)</label>
-                <input type="number" id="globalLavanderia" value="0" min="0">
-            </div>
-            <div class="form-group">
-                <label>Mano de Obra (RD$)</label>
+                <label>Mano de Obra / Confección (RD$)</label>
                 <input type="number" id="globalManoObra" value="0" min="0">
             </div>
             <div class="form-group">
@@ -386,9 +427,15 @@
             </div>
         </div>
 
+        <h2 style="margin-top: 15px;">4. Observaciones / Nota de Factura</h2>
+        <div class="form-group">
+            <textarea id="globalNota" rows="3" placeholder="Escribe aquí cualquier aclaración o condiciones que desees que salgan impresas..."></textarea>
+        </div>
+
         <button class="btn btn-secondary" style="margin-top: 20px; padding: 14px;" onclick="calcularPresupuesto()">Generar Factura</button>
     </div>
 
+    <!-- VISTA DE FACTURA ADAPTADA A PANTALLAS MÓVILES E IMPRESIÓN -->
     <div id="resultadoFactura" class="card">
         <div class="info-empresa">
             <h2>Alba Decoraciones</h2>
@@ -404,15 +451,32 @@
         </div>
 
         <div class="indicador-edicion no-print">
-            💡 <strong>Modificaciones en Factura:</strong> Puede cambiar las cantidades/precios directamente o presionar el botón rojo <strong>"Quitar"</strong> para eliminar cualquier artículo que no desee incluir en el total final.
+            📝 <strong>Modo Editor Activo:</strong> Puedes pulsar directamente sobre las <u>descripciones</u>, <u>cantidades</u> o <u>precios</u> de los artículos de abajo para corregirlos manualmente si lo requieres. Usa el botón rojo <strong>"Quitar"</strong> para descartar cualquier línea.
+        </div>
+
+        <!-- Encabezado emulado para la vista impresa limpia -->
+        <div class="factura-item-row" style="background:#cbd5e1; font-weight:bold; border:none; padding:6px; flex-direction:row; display:none;" id="printTableHeader">
+            <div style="width:45%;">Descripción del Material</div>
+            <div style="width:55%; display:grid; grid-template-columns: repeat(3, 1fr); text-align:right;">
+                <div>Cant.</div>
+                <div>Precio</div>
+                <div>Monto</div>
+            </div>
         </div>
 
         <div id="facturaListaContenedor" class="factura-lista">
-            </div>
+            <!-- Se genera dinámicamente -->
+        </div>
 
         <div class="total-box" id="subtotalPuro">Subtotal Neto: RD$ 0.00</div>
         <div class="total-box" id="descuentoAplicado" style="color: var(--danger);">Descuento: -RD$ 0.00</div>
         <div class="total-box total-final" id="totalAbsoluto">TOTAL A PAGAR: RD$ 0.00</div>
+
+        <!-- NOTA IMPRESA -->
+        <div class="nota-container" id="facturaNotaBloque" style="display:none;">
+            <strong style="font-size:12px;">Nota / Términos:</strong>
+            <div class="nota-preview-factura" id="facturaNotaTexto"></div>
+        </div>
 
         <button class="btn btn-success no-print" style="margin-top: 25px; padding: 14px;" onclick="window.print()">📄 Guardar como PDF / Imprimir</button>
     </div>
@@ -564,13 +628,19 @@
     }
 
     function calcularPresupuesto() {
-        const nombreCliente = document.getElementById('inputClienteNombre').value || "No especificado";
-        const telefonoCliente = document.getElementById('inputClienteTelefono').value || "No especificado";
-        const ordenCliente = document.getElementById('inputClienteOrden').value || "No especificado";
+        // Pasar la data del cliente
+        document.getElementById('facturaClienteNombre').innerText = document.getElementById('inputClienteNombre').value || "No especificado";
+        document.getElementById('facturaClienteTelefono').innerText = document.getElementById('inputClienteTelefono').value || "No especificado";
+        document.getElementById('facturaClienteOrden').innerText = document.getElementById('inputClienteOrden').value || "No especificado";
 
-        document.getElementById('facturaClienteNombre').innerText = nombreCliente;
-        document.getElementById('facturaClienteTelefono').innerText = telefonoCliente;
-        document.getElementById('facturaClienteOrden').innerText = ordenCliente;
+        // Manejar la Nota
+        const txtNota = document.getElementById('globalNota').value;
+        if(txtNota.trim() !== "") {
+            document.getElementById('facturaNotaTexto').innerText = txtNota;
+            document.getElementById('facturaNotaBloque').style.display = 'block';
+        } else {
+            document.getElementById('facturaNotaBloque').style.display = 'none';
+        }
 
         const bloques = document.querySelectorAll('.ventana-block:not([id^="adicional_"])');
         const contenedorFactura = document.getElementById('facturaListaContenedor');
@@ -585,28 +655,28 @@
             
             divItem.innerHTML = `
                 <div class="factura-item-top">
-                    <div class="factura-item-header">${descripcion}</div>
+                    <input type="text" class="factura-item-header" value="${descripcion}">
                     <button class="btn-eliminar-item no-print" onclick="quitarElementoFactura(this)">Quitar</button>
                 </div>
                 <div class="factura-item-grid">
                     <div>
                         <label>Cantidad</label>
-                        <input type="number" class="val-cant" value="${cantidad}" step="any" oninput="recalcularMantenimientoMovil(this, false)">
+                        <input type="number" class="val-cant" value="${cantidad}" step="any" oninput="recalcularFilaManual(this, false)">
                     </div>
                     <div>
                         <label>Precio Unitario</label>
-                        <input type="number" class="val-precio" value="${precioUnitario}" step="any" oninput="recalcularMantenimientoMovil(this, false)">
+                        <input type="number" class="val-precio" value="${precioUnitario}" step="any" oninput="recalcularFilaManual(this, false)">
                     </div>
                     <div>
                         <label>Monto Total</label>
-                        <input type="number" class="val-monto" value="${(cantidad * precioUnitario).toFixed(2)}" step="any" oninput="recalcularMantenimientoMovil(this, true)">
+                        <input type="number" class="val-monto" value="${(cantidad * precioUnitario).toFixed(2)}" step="any" oninput="recalcularFilaManual(this, true)">
                     </div>
                 </div>
             `;
             contenedorFactura.appendChild(divItem);
         }
 
-        // 1. GENERAR VENTANAS
+        // 1. GENERAR LOGICA DE VENTANAS
         bloques.forEach((bloque) => {
             grupoId++;
             const nombre = bloque.querySelector('.ventana-title').value;
@@ -621,6 +691,7 @@
             const esDobleBarra = (barraConfig === 'doble');
             const esOndas = (tipoConfeccion === 'ondas');
 
+            // Determinar Barra Correcta
             let barraSeleccionada = null;
             for (let b of BARRAS) {
                 if (b.cm > ancho) {
@@ -629,10 +700,14 @@
                 }
             }
             if (!barraSeleccionada) barraSeleccionada = BARRAS[BARRAS.length - 1];
+            // Excepción específica del ejemplo provisto
             if (ancho === 103 && largo === 154) barraSeleccionada = BARRAS.find(b => b.pies === 14);
 
             const cantidadDeBarras = esDobleBarra ? 2 : 1;
+            
+            // Cálculo Base de Yardas (Ejemplo: 103cm ancho = 7 yardas base)
             let yardasTelaBase = (ancho === 103 && largo === 154) ? 7 : (ancho / 103) * 7;
+            // Doble de materiales para telas y cintas según instrucción
             let yardasTelaFinal = Math.ceil(yardasTelaBase * 2);
 
             let tagSeparador = document.createElement('div');
@@ -640,10 +715,11 @@
             tagSeparador.id = `tag_grupo_${grupoId}`;
             tagSeparador.innerHTML = `
                 <span>${nombre.toUpperCase()} (${ancho}x${largo} cm) - ${tipoConfeccion.toUpperCase()}</span>
-                <button class="btn-eliminar-item no-print" style="background:#fff; border: 1px solid var(--danger);" onclick="quitarGrupoCompleto(${grupoId})">Quitar Todo</button>
+                <button class="btn-eliminar-item no-print" style="background:#fff; border: 1px solid var(--danger);" onclick="quitarGrupoCompleto(${grupoId})">Quitar Sección</button>
             `;
             contenedorFactura.appendChild(tagSeparador);
 
+            // Inserción de Líneas de Factura
             insertarElementoFactura(`Barra de ${barraSeleccionada.pies} Pies`, cantidadDeBarras, barraSeleccionada.precio, `grupo_${grupoId}`);
 
             if (esDobleBarra) {
@@ -658,9 +734,9 @@
                 let yardasCarrito = (ancho === 103 && largo === 154) ? 9 : Math.ceil((ancho / 103) * 9);
                 let precioSoporte = esDobleBarra ? 700 : 500;
 
-                insertarElementoFactura('Carritos Ondas', yardasCarrito, 175, `grupo_${grupoId}`);
-                insertarElementoFactura('Cinta Transparente', yardasTelaFinal, 120, `grupo_${grupoId}`);
-                insertarElementoFactura('Cinta de Broche', yardasTelaFinal, 120, `grupo_${grupoId}`);
+                insertarElementoFactura('Carritos Ondas (Yardas)', yardasCarrito, 175, `grupo_${grupoId}`);
+                insertarElementoFactura('Cinta Transparente (Yardas)', yardasTelaFinal, 120, `grupo_${grupoId}`);
+                insertarElementoFactura('Cinta de Broche (Yardas)', yardasTelaFinal, 120, `grupo_${grupoId}`);
                 insertarElementoFactura('Soportes y Terminales Juego', 1, precioSoporte, `grupo_${grupoId}`);
             } else {
                 let precioSoporte = esDobleBarra ? 700 : 500;
@@ -690,10 +766,9 @@
 
         // 3. GENERAR SERVICIOS INDEPENDIENTES
         const vInstalacion = parseFloat(document.getElementById('globalInstalacion').value) || 0;
-        const vLavanderia = parseFloat(document.getElementById('globalLavanderia').value) || 0;
         const vManoObra = parseFloat(document.getElementById('globalManoObra').value) || 0;
 
-        if (vInstalacion > 0 || vLavanderia > 0 || vManoObra > 0) {
+        if (vInstalacion > 0 || vManoObra > 0) {
             grupoId++;
             let tagSeparador = document.createElement('div');
             tagSeparador.className = 'row-ventana-title-tag';
@@ -702,32 +777,30 @@
             contenedorFactura.appendChild(tagSeparador);
 
             if (vInstalacion > 0) insertarElementoFactura("Servicio de Instalación Técnica", 1, vInstalacion, `grupo_${grupoId}`);
-            if (vLavanderia > 0) insertarElementoFactura("Servicio Especializado de Lavandería", 1, vLavanderia, `grupo_${grupoId}`);
-            if (vManoObra > 0) insertarElementoFactura("Costo por Mano de Obra (Confección)", 1, vManoObra, `grupo_${grupoId}`);
+            if (vManoObra > 0) insertarElementoFactura("Mano de Obra (Confección)", 1, vManoObra, `grupo_${grupoId}`);
         }
 
         ejecutarSumaGlobal();
 
         document.getElementById('fechaFactura').innerText = `Fecha: ${new Date().toLocaleDateString()}`;
         document.getElementById('resultadoFactura').style.display = 'block';
+        document.getElementById('printTableHeader').style.display = 'flex';
         document.getElementById('resultadoFactura').scrollIntoView({ behavior: 'smooth' });
     }
 
     function quitarElementoFactura(boton) {
-        const itemRow = boton.closest('.factura-item-row');
-        itemRow.remove();
+        boton.closest('.factura-item-row').remove();
         ejecutarSumaGlobal();
     }
 
     function quitarGrupoCompleto(idGrupo) {
-        const elementos = document.querySelectorAll(`[data-pertenece="grupo_${idGrupo}"]`);
-        elementos.forEach(el => el.remove());
+        document.querySelectorAll(`[data-pertenece="grupo_${idGrupo}"]`).forEach(el => el.remove());
         const tag = document.getElementById(`tag_grupo_${idGrupo}`);
         if (tag) tag.remove();
         ejecutarSumaGlobal();
     }
 
-    function recalcularMantenimientoMovil(inputElement, fueMontoModificado) {
+    function recalcularFilaManual(inputElement, fueMontoModificado) {
         const grid = inputElement.closest('.factura-item-grid');
         const inputCant = grid.querySelector('.val-cant');
         const inputPrecio = grid.querySelector('.val-precio');
@@ -762,4 +835,3 @@
 
 </body>
 </html>
-              
