@@ -32,15 +32,15 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-zinc-900/50 p-4 rounded-xl border border-zinc-800">
             <div>
                 <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Nombre del Cliente</label>
-                <input type="text" id="clientName" placeholder="Ej. María Pérez" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500">
+                <input type="text" id="clientName" placeholder="Ej. María Pérez" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
             </div>
             <div>
                 <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Número de Teléfono</label>
-                <input type="text" id="clientPhone" placeholder="Ej. 809-555-5555" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500">
+                <input type="text" id="clientPhone" placeholder="Ej. 809-555-5555" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
             </div>
             <div>
-                <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Número de Orden</label>
-                <input type="text" id="orderNumber" placeholder="Ej. #1024" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500">
+                <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Número de Orden / Cotización</label>
+                <input type="text" id="orderNumber" placeholder="Ej. #1024" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
             </div>
         </div>
 
@@ -50,15 +50,15 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <div class="md:col-span-2">
                     <label class="block text-xs text-zinc-400 mb-1">Identificador / Nombre de la Ventana</label>
-                    <input type="text" id="winName" value="Ventana Principal" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500">
+                    <input type="text" id="winName" value="Ventana" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
                 </div>
                 <div>
                     <label class="block text-xs text-zinc-400 mb-1">Ancho (cm)</label>
-                    <input type="number" id="winWidth" placeholder="Ej. 103" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500">
+                    <input type="number" id="winWidth" placeholder="Ej. 103" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
                 </div>
                 <div>
                     <label class="block text-xs text-zinc-400 mb-1">Largo (cm)</label>
-                    <input type="number" id="winLength" placeholder="Ej. 154" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500">
+                    <input type="number" id="winLength" placeholder="Ej. 154" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
                 </div>
             </div>
 
@@ -87,7 +87,7 @@
                 </div>
                 <div>
                     <label class="block text-xs text-zinc-400 mb-1">Cantidad de Ventanas Iguales</label>
-                    <input type="number" id="winQty" value="1" min="1" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500">
+                    <input type="number" id="winQty" value="1" min="1" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
                 </div>
             </div>
 
@@ -99,15 +99,15 @@
         <div class="bg-zinc-900 p-4 rounded-xl border border-zinc-800 mb-6 grid grid-cols-1 md:grid-cols-4 gap-3 items-end">
             <div>
                 <label class="block text-xs text-zinc-400 mb-1">Artículo Adicional</label>
-                <input type="text" id="extraName" placeholder="Ej. Bastones de 60 cm" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500">
+                <input type="text" id="extraName" placeholder="Ej. Bastones de 60 cm" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
             </div>
             <div>
                 <label class="block text-xs text-zinc-400 mb-1">Precio Unitario (RD$)</label>
-                <input type="number" id="extraPrice" placeholder="Ej. 500" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500">
+                <input type="number" id="extraPrice" placeholder="Ej. 500" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
             </div>
             <div>
                 <label class="block text-xs text-zinc-400 mb-1">Cantidad</label>
-                <input type="number" id="extraQty" value="1" min="1" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500">
+                <input type="number" id="extraQty" value="1" min="1" class="w-full bg-zinc-800 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
             </div>
             <button onclick="addExtraItem()" class="bg-zinc-700 hover:bg-zinc-600 text-white font-semibold text-sm py-2.5 rounded transition duration-200 cursor-pointer">
                 + Agregar Adicional
@@ -134,16 +134,16 @@
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Mano de Obra e Instalación (RD$)</label>
-                    <input type="number" id="installCost" value="0" oninput="calculateTotal()" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500">
+                    <input type="number" id="installCost" value="0" oninput="calculateTotal()" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
                 </div>
                 <div>
                     <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Descuento (%)</label>
-                    <input type="number" id="discountPercent" value="0" min="0" max="100" oninput="calculateTotal()" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500">
+                    <input type="number" id="discountPercent" value="0" min="0" max="100" oninput="calculateTotal()" class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white">
                 </div>
             </div>
             <div>
                 <label class="block text-xs uppercase tracking-wider text-zinc-400 mb-1">Notas / Instrucciones Especiales (Saldrá en Factura)</label>
-                <textarea id="invoiceNotes" rows="4" placeholder="Escribe aquí detalles de plazos de entrega, especificaciones del color o de los rieles..." class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white"></textarea>
+                <textarea id="invoiceNotes" rows="4" placeholder="Escribe aquí detalles de plazos de entrega, especificaciones del color, etc..." class="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:outline-none focus:border-amber-500 text-white"></textarea>
             </div>
         </div>
 
@@ -153,9 +153,12 @@
             <div class="text-xl font-bold font-luxury tracking-wider gold-text mt-2">TOTAL GENERAL: <span id="lblTotal" class="ml-2">RD$ 0.00</span></div>
         </div>
 
-        <div class="mt-6">
-            <button onclick="generatePDFInvoice()" class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-3 rounded-lg text-sm uppercase tracking-widest cursor-pointer transition shadow-lg">
-                Generar Factura PDF de Alta Estética
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+            <button onclick="shareViaWhatsApp()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-lg text-sm uppercase tracking-widest cursor-pointer transition shadow-lg text-center flex items-center justify-center gap-2">
+                🟢 Enviar / Compartir por WhatsApp
+            </button>
+            <button onclick="generatePDFInvoice()" class="w-full bg-amber-500 hover:bg-amber-600 text-black font-bold py-3 rounded-lg text-sm uppercase tracking-widest cursor-pointer transition shadow-lg text-center flex items-center justify-center gap-2">
+                📄 Descargar Factura PDF Estética
             </button>
         </div>
     </div>
@@ -218,13 +221,9 @@
     </div>
 
     <script>
-        // Array global para almacenar todos los materiales agregados
         let quoteItems = [];
-
-        // Constantes de conversión y aproximaciones exactas
         const CM_PER_YARD = 91.44;
 
-        // Base de datos de precios estipulados
         const PRICES = {
             barra10: 1050, barra12: 1200, barra14: 1250, barra16: 1450,
             blackout: 480, visillo: 300,
@@ -233,7 +232,6 @@
             carritoTachonPkg: 350, ganchoTachonPkg: 70
         };
 
-        // Escoge la barra comercial perfecta según el ancho en centímetros
         function matchBarSpec(widthCm) {
             const widthInPies = widthCm / 30.48;
             if (widthInPies <= 10) return { name: "Barra de 10 Pies", price: PRICES.barra10 };
@@ -243,7 +241,7 @@
         }
 
         function addWindowItem() {
-            const name = document.getElementById('winName').value.trim();
+            const baseName = document.getElementById('winName').value.trim();
             const width = parseFloat(document.getElementById('winWidth').value);
             const length = parseFloat(document.getElementById('winLength').value);
             const type = document.getElementById('winType').value;
@@ -256,73 +254,62 @@
                 return;
             }
 
-            // LÓGICA RIGUROSA DE CÓMPUTO SEGÚN REQUERIMIENTOS DEL CLIENTE
             const barSpec = matchBarSpec(width);
             const barCount = (barMode === 'doble') ? 2 : 1;
             
-            // Regla de ejemplo del cliente: 103x154 genera magnitudes específicas (Aprox 14 yardas de tela por holgura de pliegues)
             let calculatedYards = Math.ceil((width * 12) / CM_PER_YARD); 
-            if(width === 103 && length === 154) calculatedYards = 14; // Match de calibración exacta al ejemplo enviado
+            if(width === 103 && length === 154) calculatedYards = 14; 
 
             const groupUID = Date.now();
+            const name = `${baseName} (${width}x${length}cm)`;
 
-            // 1. Barras de soporte
             quoteItems.push({
                 id: groupUID + "_bar",
-                desc: `[${name}] ${barSpec.name} (${barMode === 'doble' ? 'Doble Barra' : 'Simple'})`,
+                desc: `[${name}] ${barSpec.name} (${barMode === 'doble' ? 'Doble' : 'Simple'})`,
                 qty: barCount * qty,
-                price: barSpec.price,
-                isEditable: true
+                price: barSpec.price
             });
 
-            // 2. Elemento de fijación / Soportes y Terminales
             const supportPrice = (barMode === 'doble') ? PRICES.soporteDoble : PRICES.soporteSimple;
             quoteItems.push({
                 id: groupUID + "_support",
-                desc: `[${name}] Soporte y Terminales (${barMode === 'doble' ? 'Doble' : 'Simple'})`,
+                desc: `[${name}] Soporte y Terminales`,
                 qty: 1 * qty,
-                price: supportPrice,
-                isEditable: true
+                price: supportPrice
             });
 
-            // 3. Confecciones Específicas
             if (type === 'ondas') {
-                // Cantidad base para ondas se duplica según requerimientos de pliegues pesados
                 const waveYards = calculatedYards; 
                 
                 if (fabric === 'visillo' || fabric === 'ambas') {
-                    quoteItems.push({ id: groupUID + "_vis", desc: `[${name}] Tela Visillo (Yardas)`, qty: waveYards * qty, price: PRICES.visillo, isEditable: true });
+                    quoteItems.push({ id: groupUID + "_vis", desc: `[${name}] Tela Visillo (Yd)`, qty: waveYards * qty, price: PRICES.visillo });
                 }
                 if (fabric === 'blackout' || fabric === 'ambas') {
-                    quoteItems.push({ id: groupUID + "_blk", desc: `[${name}] Tela Blackout (Yardas)`, qty: waveYards * qty, price: PRICES.blackout, isEditable: true });
+                    quoteItems.push({ id: groupUID + "_blk", desc: `[${name}] Tela Blackout (Yd)`, qty: waveYards * qty, price: PRICES.blackout });
                 }
 
-                // Carritos y complementos de ondas (9 yardas calculadas en el ejemplo calibrado)
                 let waveCarritosYards = Math.ceil((width * 8) / CM_PER_YARD);
                 if(width === 103) waveCarritosYards = 9;
 
-                quoteItems.push({ id: groupUID + "_carr_on", desc: `[${name}] Carritos Ondas (Yardas)`, qty: waveCarritosYards * qty, price: PRICES.carritoOndas, isEditable: true });
-                quoteItems.push({ id: groupUID + "_cint_tr", desc: `[${name}] Cinta Transparente (Yardas)`, qty: waveYards * qty, price: PRICES.cintaTransparente, isEditable: true });
-                quoteItems.push({ id: groupUID + "_cint_br", desc: `[${name}] Cinta de Broche (Yardas)`, qty: waveYards * qty, price: PRICES.cintaBroche, isEditable: true });
+                quoteItems.push({ id: groupUID + "_carr_on", desc: `[${name}] Carritos Ondas (Yd)`, qty: waveCarritosYards * qty, price: PRICES.carritoOndas });
+                quoteItems.push({ id: groupUID + "_cint_tr", desc: `[${name}] Cinta Transparente (Yd)`, qty: waveYards * qty, price: PRICES.cintaTransparente });
+                quoteItems.push({ id: groupUID + "_cint_br", desc: `[${name}] Cinta de Broche (Yd)`, qty: waveYards * qty, price: PRICES.cintaBroche });
 
             } else if (type === 'tachones') {
-                // Tachones duplica cantidad de tela base
                 const tachonYards = calculatedYards;
 
                 if (fabric === 'visillo' || fabric === 'ambas') {
-                    quoteItems.push({ id: groupUID + "_vis", desc: `[${name}] Tela Visillo (Yardas)`, qty: tachonYards * qty, price: PRICES.visillo, isEditable: true });
+                    quoteItems.push({ id: groupUID + "_vis", desc: `[${name}] Tela Visillo (Yd)`, qty: tachonYards * qty, price: PRICES.visillo });
                 }
                 if (fabric === 'blackout' || fabric === 'ambas') {
-                    quoteItems.push({ id: groupUID + "_blk", desc: `[${name}] Tela Blackout (Yardas)`, qty: tachonYards * qty, price: PRICES.blackout, isEditable: true });
+                    quoteItems.push({ id: groupUID + "_blk", desc: `[${name}] Tela Blackout (Yd)`, qty: tachonYards * qty, price: PRICES.blackout });
                 }
 
-                // Inclusión automática de 1 paquete cerrado por ventana
-                quoteItems.push({ id: groupUID + "_carr_tach", desc: `[${name}] Carritos Tachones (Paquete x100)`, qty: 1 * qty, price: PRICES.carritoTachonPkg, isEditable: true });
-                quoteItems.push({ id: groupUID + "_ganch_tach", desc: `[${name}] Ganchos Tachones (Paquete x100)`, qty: 1 * qty, price: PRICES.ganchoTachonPkg, isEditable: true });
+                quoteItems.push({ id: groupUID + "_carr_tach", desc: `[${name}] Carritos Tachones (Paq x100)`, qty: 1 * qty, price: PRICES.carritoTachonPkg });
+                quoteItems.push({ id: groupUID + "_ganch_tach", desc: `[${name}] Ganchos Tachones (Paq x100)`, qty: 1 * qty, price: PRICES.ganchoTachonPkg });
             }
 
             renderTable();
-            // Resetear campos principales
             document.getElementById('winWidth').value = '';
             document.getElementById('winLength').value = '';
         }
@@ -333,7 +320,7 @@
             const qty = parseInt(document.getElementById('extraQty').value) || 1;
 
             if (!name || isNaN(price)) {
-                alert("Introduce descripción y precio válidos para el producto adicional.");
+                alert("Introduce descripción y precio válidos.");
                 return;
             }
 
@@ -341,8 +328,7 @@
                 id: Date.now() + "_extra",
                 desc: name,
                 qty: qty,
-                price: price,
-                isEditable: true
+                price: price
             });
 
             renderTable();
@@ -371,7 +357,7 @@
             tbody.innerHTML = '';
 
             if(quoteItems.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-zinc-500 italic">No hay ventanas ni conceptos añadidos a la cotización todavía.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-zinc-500 italic">No hay elementos agregados.</td></tr>`;
                 calculateTotal();
                 return;
             }
@@ -394,7 +380,7 @@
                         RD$ ${subtotal.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </td>
                     <td class="p-2.5 text-center">
-                        <button onclick="removeItem('${item.id}')" class="text-red-400 hover:text-red-600 transition font-bold px-2 cursor-pointer text-base" title="Eliminar fila">&times;</button>
+                        <button onclick="removeItem('${item.id}')" class="text-red-400 hover:text-red-600 transition font-bold px-2 cursor-pointer text-base">&times;</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -412,28 +398,72 @@
             const discountAmount = baseSum * (discountPercent / 100);
             const absoluteTotal = baseSum - discountAmount;
 
-            // Renderizar etiquetas en pantalla principal
             document.getElementById('lblInstall').innerText = `RD$ ${installCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
             document.getElementById('lblDiscount').innerText = `-RD$ ${discountAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })} (${discountPercent}%)`;
             document.getElementById('lblTotal').innerText = `RD$ ${absoluteTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
 
-            return { itemsSubtotal, installCost, discountAmount, absoluteTotal };
+            return { itemsSubtotal, installCost, discountAmount, absoluteTotal, discountPercent };
+        }
+
+        // NUEVA FUNCIÓN COMPARTIR VÍA WHATSAPP NATIVO
+        function shareViaWhatsApp() {
+            if (quoteItems.length === 0) {
+                alert("Agrega al menos un artículo para poder enviar el presupuesto.");
+                return;
+            }
+
+            const totals = calculateTotal();
+            const clientName = document.getElementById('clientName').value.trim() || 'Estimado Cliente';
+            const orderNum = document.getElementById('orderNumber').value.trim() || 'S/N';
+            const notes = document.getElementById('invoiceNotes').value.trim();
+
+            // Construcción estética del mensaje de texto
+            let message = `*✨ ALBA DECORACIONES ✨*\n`;
+            message += `_Diseñando Espacios con Pasión y Elegancia_\n\n`;
+            message += `*Presupuesto / Orden:* ${orderNum}\n`;
+            message += `*Cliente:* ${clientName}\n`;
+            message += `*Fecha:* ${new Date().toLocaleDateString('es-DO')}\n`;
+            message += `-------------------------------------------\n\n`;
+
+            quoteItems.forEach((item, index) => {
+                const sub = item.qty * item.price;
+                message += `${index + 1}. *${item.desc}*\n`;
+                message += `   Cant: ${item.qty} x RD$ ${item.price.toLocaleString('en-US')} = *RD$ ${sub.toLocaleString('en-US')}*\n`;
+            });
+
+            message += `\n-------------------------------------------`;
+            if (totals.installCost > 0) {
+                message += `\n*Mano de Obra / Instalación:* RD$ ${totals.installCost.toLocaleString('en-US')}`;
+            }
+            if (totals.discountAmount > 0) {
+                message += `\n*Descuento (${totals.discountPercent}%):* -RD$ ${totals.discountAmount.toLocaleString('en-US')}`;
+            }
+            message += `\n*💰 TOTAL NETO A PAGAR: RD$ ${totals.absoluteTotal.toLocaleString('en-US')}*`;
+
+            if (notes) {
+                message += `\n\n*Nota aclaratoria:* ${notes}`;
+            }
+
+            message += `\n\n____________________________\n`;
+            message += `*Contacto & Redes:*\n`;
+            message += `📞 Tels: 829-263-1340 | 849-856-4191\n`;
+            message += `📸 Instagram: @Albadecoraciones.dom`;
+
+            // Encodear texto para URL de WhatsApp
+            const urlEncodedMessage = encodeURIComponent(message);
+            window.open(`https://api.whatsapp.com/send?text=${urlEncodedMessage}`, '_blank');
         }
 
         function generatePDFInvoice() {
             const totals = calculateTotal();
 
-            // Sincronizar datos del cliente al módulo oculto de impresión
             document.getElementById('pdfClientName').innerText = document.getElementById('clientName').value.trim() || 'Cliente General';
-            document.getElementById('pdfClientPhone').innerText = document.getElementById('clientPhone').value.trim() ? 'Teléfono: ' + document.getElementById('clientPhone').value.trim() : 'Sin teléfono asignado';
+            document.getElementById('pdfClientPhone').innerText = document.getElementById('clientPhone').value.trim() ? 'Teléfono: ' + document.getElementById('clientPhone').value.trim() : 'Sin teléfono';
             document.getElementById('pdfOrderId').innerText = document.getElementById('orderNumber').value.trim() || 'S/N';
             document.getElementById('pdfDate').innerText = new Date().toLocaleDateString('es-DO');
             document.getElementById('pdfNotes').innerText = document.getElementById('invoiceNotes').value.trim() || 'Sin observaciones adicionales.';
-            
-            // Cantidad de elementos calculados
-            document.getElementById('pdfSummaryWindows').innerText = `Total elementos a confeccionar: ${quoteItems.length} líneas de materiales`;
+            document.getElementById('pdfSummaryWindows').innerText = `Total elementos: ${quoteItems.length} líneas calculadas`;
 
-            // Construir la tabla limpia para el PDF
             const pdfTbody = document.getElementById('pdfTableBody');
             pdfTbody.innerHTML = '';
 
@@ -450,14 +480,12 @@
                 pdfTbody.appendChild(tr);
             });
 
-            // Sincronizar bloques de pie de página financieros
             document.getElementById('pdfInstallCost').innerText = `RD$ ${totals.installCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
             document.getElementById('pdfDiscount').innerText = `-RD$ ${totals.discountAmount.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
             document.getElementById('pdfTotalGeneral').innerText = `RD$ ${totals.absoluteTotal.toLocaleString('en-US', { minimumFractionDigits: 2 })}`;
 
-            // Opciones del motor de exportación PDF
             const targetEl = document.getElementById('invoiceRenderTemplate');
-            targetEl.classList.remove('hidden'); // Mostrar temporalmente para el renderizado
+            targetEl.classList.remove('hidden'); 
 
             const options = {
                 margin:       0.3,
@@ -468,11 +496,10 @@
             };
 
             html2pdf().from(targetEl).set(options).save().then(() => {
-                targetEl.classList.add('hidden'); // Volver a resguardar plantilla oculta
+                targetEl.classList.add('hidden'); 
             });
         }
 
-        // Inicializar tabla vacía al cargar
         renderTable();
     </script>
 </body>
