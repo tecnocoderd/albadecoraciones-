@@ -107,14 +107,25 @@
             font-size: 12px;
             font-weight: bold;
         }
+        
+        .btn-eliminar-item {
+            background: #fee2e2;
+            color: var(--danger);
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
 
         .grid-inputs {
             display: grid;
-            grid-template-columns: 1fr; /* Columna única en móviles */
+            grid-template-columns: 1fr;
             gap: 10px;
         }
 
-        /* Se expande a más columnas en tablets y computadoras */
         @media(min-width: 580px) {
             .grid-inputs { grid-template-columns: repeat(2, 1fr); }
         }
@@ -136,7 +147,7 @@
         }
 
         input, select {
-            padding: 10px 12px; /* Más grandes para pantallas táctiles */
+            padding: 10px 12px;
             border: 1px solid var(--border);
             border-radius: 8px;
             font-size: 15px;
@@ -168,7 +179,7 @@
         .btn-secondary { background: var(--secondary); color: white; }
         .btn-success { background: var(--success); color: white; font-size: 16px; }
 
-        /* DISEÑO DE TABLA ADAPTADA A CELULARES (RESPONSIVE TOTAL) */
+        /* DISEÑO DE FACTURA ADAPTADA A CELULARES */
         .factura-lista {
             margin-top: 15px;
         }
@@ -184,10 +195,18 @@
             gap: 6px;
         }
 
+        .factura-item-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
         .factura-item-header {
             font-weight: bold;
             font-size: 14px;
             color: var(--text);
+            flex-grow: 1;
         }
 
         .factura-item-grid {
@@ -224,6 +243,9 @@
             font-size: 13px;
             margin-top: 15px;
             margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .total-box {
@@ -255,6 +277,22 @@
         .info-empresa h2 { color: var(--primary); margin-bottom: 4px; font-size: 20px; }
         .info-empresa p { font-size: 12px; color: #475569; }
 
+        .info-cliente-factura {
+            background: #f8fafc;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 4px;
+        }
+
+        @media(min-width: 480px) {
+            .info-cliente-factura { grid-template-columns: 1fr 1fr; }
+        }
+
         .indicador-edicion {
             background: #eff6ff;
             color: #1e40af;
@@ -271,8 +309,9 @@
             body { background: white; padding: 0; }
             .card { border: none; box-shadow: none; padding: 0; }
             #resultadoFactura { display: block !important; }
+            .info-cliente-factura { background: transparent; }
+            .btn-eliminar-item { display: none !important; }
             
-            /* En el PDF impreso vuelve a verse compacto */
             .factura-item-row { 
                 flex-direction: row; 
                 justify-content: space-between;
@@ -282,7 +321,8 @@
                 padding: 6px 0;
                 margin: 0;
             }
-            .factura-item-header { width: 40%; font-size: 12px; }
+            .factura-item-top { width: 40%; }
+            .factura-item-header { font-size: 12px; }
             .factura-item-grid { width: 60%; grid-template-columns: repeat(3, 1fr); }
             .factura-item-grid input { border: none !important; background: transparent !important; pointer-events: none; }
             .factura-item-grid label { display: none; }
@@ -297,8 +337,23 @@
         <p>Cotizador Móvil Avanzado</p>
     </header>
 
-    <!-- 1. FORMULARIO DE ENTRADA -->
     <div class="card no-print">
+        <h2>0. Información del Cliente</h2>
+        <div class="grid-inputs" style="margin-bottom: 15px;">
+            <div class="form-group">
+                <label>Nombre del Cliente</label>
+                <input type="text" id="inputClienteNombre" placeholder="Ej. Juan Pérez">
+            </div>
+            <div class="form-group">
+                <label>Número de Teléfono</label>
+                <input type="tel" id="inputClienteTelefono" placeholder="Ej. 809-555-1234">
+            </div>
+            <div class="form-group">
+                <label>Número de Orden</label>
+                <input type="text" id="inputClienteOrden" placeholder="Ej. #00125">
+            </div>
+        </div>
+
         <h2>1. Configuración de Ventanas</h2>
         <div id="ventanasContenedor"></div>
         
@@ -334,7 +389,6 @@
         <button class="btn btn-secondary" style="margin-top: 20px; padding: 14px;" onclick="calcularPresupuesto()">Generar Factura</button>
     </div>
 
-    <!-- 2. VISTA DE FACTURA ADAPTADA A PANTALLAS MÓVILES -->
     <div id="resultadoFactura" class="card">
         <div class="info-empresa">
             <h2>Alba Decoraciones</h2>
@@ -343,14 +397,18 @@
             <p id="fechaFactura" style="margin-top: 4px; font-weight: bold;"></p>
         </div>
 
-        <div class="indicador-edicion no-print">
-            💡 <strong>Sugerencia Táctil:</strong> En los cuadros de abajo puedes presionar y corregir cantidades o precios directamente con el teclado del celular si necesitas reajustar algo.
+        <div class="info-cliente-factura">
+            <div><strong>Cliente:</strong> <span id="facturaClienteNombre">---</span></div>
+            <div><strong>Teléfono:</strong> <span id="facturaClienteTelefono">---</span></div>
+            <div style="grid-column: 1 / -1;"><strong>Número de Orden:</strong> <span id="facturaClienteOrden">---</span></div>
         </div>
 
-        <!-- Contenedor adaptivo para reemplazo de tabla -->
-        <div id="facturaListaContenedor" class="factura-lista">
-            <!-- Se genera dinámicamente -->
+        <div class="indicador-edicion no-print">
+            💡 <strong>Modificaciones en Factura:</strong> Puede cambiar las cantidades/precios directamente o presionar el botón rojo <strong>"Quitar"</strong> para eliminar cualquier artículo que no desee incluir en el total final.
         </div>
+
+        <div id="facturaListaContenedor" class="factura-lista">
+            </div>
 
         <div class="total-box" id="subtotalPuro">Subtotal Neto: RD$ 0.00</div>
         <div class="total-box" id="descuentoAplicado" style="color: var(--danger);">Descuento: -RD$ 0.00</div>
@@ -372,7 +430,6 @@
         { pies: 16, cm: 16 * CM_POR_PIE, precio: 1450 }
     ];
 
-    // Cargar una ventana por defecto al abrir la app
     window.onload = function() {
         agregarVentana();
     };
@@ -507,16 +564,30 @@
     }
 
     function calcularPresupuesto() {
+        const nombreCliente = document.getElementById('inputClienteNombre').value || "No especificado";
+        const telefonoCliente = document.getElementById('inputClienteTelefono').value || "No especificado";
+        const ordenCliente = document.getElementById('inputClienteOrden').value || "No especificado";
+
+        document.getElementById('facturaClienteNombre').innerText = nombreCliente;
+        document.getElementById('facturaClienteTelefono').innerText = telefonoCliente;
+        document.getElementById('facturaClienteOrden').innerText = ordenCliente;
+
         const bloques = document.querySelectorAll('.ventana-block:not([id^="adicional_"])');
         const contenedorFactura = document.getElementById('facturaListaContenedor');
         contenedorFactura.innerHTML = '';
 
-        function insertarElementoFactura(descripcion, cantidad, precioUnitario) {
+        let grupoId = 0;
+
+        function insertarElementoFactura(descripcion, cantidad, precioUnitario, perteneceA) {
             const divItem = document.createElement('div');
             divItem.className = 'factura-item-row';
+            divItem.setAttribute('data-pertenece', perteneceA);
             
             divItem.innerHTML = `
-                <div class="factura-item-header">${descripcion}</div>
+                <div class="factura-item-top">
+                    <div class="factura-item-header">${descripcion}</div>
+                    <button class="btn-eliminar-item no-print" onclick="quitarElementoFactura(this)">Quitar</button>
+                </div>
                 <div class="factura-item-grid">
                     <div>
                         <label>Cantidad</label>
@@ -537,6 +608,7 @@
 
         // 1. GENERAR VENTANAS
         bloques.forEach((bloque) => {
+            grupoId++;
             const nombre = bloque.querySelector('.ventana-title').value;
             const ancho = parseFloat(bloque.querySelector('.v-ancho').value) || 0;
             const largo = parseFloat(bloque.querySelector('.v-largo').value) || 0;
@@ -565,48 +637,54 @@
 
             let tagSeparador = document.createElement('div');
             tagSeparador.className = 'row-ventana-title-tag';
-            tagSeparador.innerText = `${nombre.toUpperCase()} (${ancho}x${largo} cm) - Confección: ${tipoConfeccion.toUpperCase()}`;
+            tagSeparador.id = `tag_grupo_${grupoId}`;
+            tagSeparador.innerHTML = `
+                <span>${nombre.toUpperCase()} (${ancho}x${largo} cm) - ${tipoConfeccion.toUpperCase()}</span>
+                <button class="btn-eliminar-item no-print" style="background:#fff; border: 1px solid var(--danger);" onclick="quitarGrupoCompleto(${grupoId})">Quitar Todo</button>
+            `;
             contenedorFactura.appendChild(tagSeparador);
 
-            insertarElementoFactura(`Barra de ${barraSeleccionada.pies} Pies`, cantidadDeBarras, barraSeleccionada.precio);
+            insertarElementoFactura(`Barra de ${barraSeleccionada.pies} Pies`, cantidadDeBarras, barraSeleccionada.precio, `grupo_${grupoId}`);
 
             if (esDobleBarra) {
-                insertarElementoFactura('Tela Visillo (Calculado x2)', yardasTelaFinal, 300);
-                insertarElementoFactura('Tela Blackout (Calculado x2)', yardasTelaFinal, 480);
+                insertarElementoFactura('Tela Visillo (Calculado x2)', yardasTelaFinal, 300, `grupo_${grupoId}`);
+                insertarElementoFactura('Tela Blackout (Calculado x2)', yardasTelaFinal, 480, `grupo_${grupoId}`);
             } else {
                 let nombreTela = (precioTelaIndividual === 480) ? "Tela Blackout (Calculado x2)" : "Tela Visillo (Calculado x2)";
-                insertarElementoFactura(nombreTela, yardasTelaFinal, precioTelaIndividual);
+                insertarElementoFactura(nombreTela, yardasTelaFinal, precioTelaIndividual, `grupo_${grupoId}`);
             }
 
             if (esOndas) {
                 let yardasCarrito = (ancho === 103 && largo === 154) ? 9 : Math.ceil((ancho / 103) * 9);
                 let precioSoporte = esDobleBarra ? 700 : 500;
 
-                insertarElementoFactura('Carritos Ondas', yardasCarrito, 175);
-                insertarElementoFactura('Cinta Transparente', yardasTelaFinal, 120);
-                insertarElementoFactura('Cinta de Broche', yardasTelaFinal, 120);
-                insertarElementoFactura('Soportes y Terminales Juego', 1, precioSoporte);
+                insertarElementoFactura('Carritos Ondas', yardasCarrito, 175, `grupo_${grupoId}`);
+                insertarElementoFactura('Cinta Transparente', yardasTelaFinal, 120, `grupo_${grupoId}`);
+                insertarElementoFactura('Cinta de Broche', yardasTelaFinal, 120, `grupo_${grupoId}`);
+                insertarElementoFactura('Soportes y Terminales Juego', 1, precioSoporte, `grupo_${grupoId}`);
             } else {
                 let precioSoporte = esDobleBarra ? 700 : 500;
-                insertarElementoFactura('Carritos Tachones (Paquete 100)', 1, 350);
-                insertarElementoFactura('Ganchos Tachones (Paquete 100)', 1, 70);
-                insertarElementoFactura('Soportes y Terminales Juego', 1, precioSoporte);
+                insertarElementoFactura('Carritos Tachones (Paquete 100)', 1, 350, `grupo_${grupoId}`);
+                insertarElementoFactura('Ganchos Tachones (Paquete 100)', 1, 70, `grupo_${grupoId}`);
+                insertarElementoFactura('Soportes y Terminales Juego', 1, precioSoporte, `grupo_${grupoId}`);
             }
         });
 
         // 2. GENERAR ADICIONALES
         const adicionales = document.querySelectorAll('[id^="adicional_"]');
         if (adicionales.length > 0) {
+            grupoId++;
             let tagSeparador = document.createElement('div');
             tagSeparador.className = 'row-ventana-title-tag';
-            tagSeparador.innerText = `ARTÍCULOS ADICIONALES`;
+            tagSeparador.id = `tag_grupo_${grupoId}`;
+            tagSeparador.innerHTML = `<span>ARTÍCULOS ADICIONALES</span>`;
             contenedorFactura.appendChild(tagSeparador);
 
             adicionales.forEach((bAd) => {
                 const nombreAd = bAd.querySelector('.a-nombre').value || "Artículo Adicional";
                 const cantAd = parseFloat(bAd.querySelector('.a-cant').value) || 0;
                 const precioAd = parseFloat(bAd.querySelector('.a-precio').value) || 0;
-                if(cantAd > 0) insertarElementoFactura(nombreAd, cantAd, precioAd);
+                if(cantAd > 0) insertarElementoFactura(nombreAd, cantAd, precioAd, `grupo_${grupoId}`);
             });
         }
 
@@ -616,14 +694,16 @@
         const vManoObra = parseFloat(document.getElementById('globalManoObra').value) || 0;
 
         if (vInstalacion > 0 || vLavanderia > 0 || vManoObra > 0) {
+            grupoId++;
             let tagSeparador = document.createElement('div');
             tagSeparador.className = 'row-ventana-title-tag';
-            tagSeparador.innerText = `SERVICIOS DEL TRABAJO`;
+            tagSeparador.id = `tag_grupo_${grupoId}`;
+            tagSeparador.innerHTML = `<span>SERVICIOS DEL TRABAJO</span>`;
             contenedorFactura.appendChild(tagSeparador);
 
-            if (vInstalacion > 0) insertarElementoFactura("Servicio de Instalación Técnica", 1, vInstalacion);
-            if (vLavanderia > 0) insertarElementoFactura("Servicio Especializado de Lavandería", 1, vLavanderia);
-            if (vManoObra > 0) insertarElementoFactura("Costo por Mano de Obra (Confección)", 1, vManoObra);
+            if (vInstalacion > 0) insertarElementoFactura("Servicio de Instalación Técnica", 1, vInstalacion, `grupo_${grupoId}`);
+            if (vLavanderia > 0) insertarElementoFactura("Servicio Especializado de Lavandería", 1, vLavanderia, `grupo_${grupoId}`);
+            if (vManoObra > 0) insertarElementoFactura("Costo por Mano de Obra (Confección)", 1, vManoObra, `grupo_${grupoId}`);
         }
 
         ejecutarSumaGlobal();
@@ -631,6 +711,20 @@
         document.getElementById('fechaFactura').innerText = `Fecha: ${new Date().toLocaleDateString()}`;
         document.getElementById('resultadoFactura').style.display = 'block';
         document.getElementById('resultadoFactura').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function quitarElementoFactura(boton) {
+        const itemRow = boton.closest('.factura-item-row');
+        itemRow.remove();
+        ejecutarSumaGlobal();
+    }
+
+    function quitarGrupoCompleto(idGrupo) {
+        const elementos = document.querySelectorAll(`[data-pertenece="grupo_${idGrupo}"]`);
+        elementos.forEach(el => el.remove());
+        const tag = document.getElementById(`tag_grupo_${idGrupo}`);
+        if (tag) tag.remove();
+        ejecutarSumaGlobal();
     }
 
     function recalcularMantenimientoMovil(inputElement, fueMontoModificado) {
@@ -668,3 +762,4 @@
 
 </body>
 </html>
+              
