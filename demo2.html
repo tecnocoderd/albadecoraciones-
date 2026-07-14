@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura Personalizable - Alba Decoraciones</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #d35400;
+            --bg: #f8f9fa;
+            --card-bg: #ffffff;
+            --border: #cccccc;
+            --text: #2c3e50;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 10px;
+            font-size: 11px;
+        }
+
+        .container {
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 6px;
+            margin-bottom: 10px;
+        }
+
+        header h1 { font-size: 18px; color: var(--primary); text-transform: uppercase; }
+        header p { font-size: 10px; color: #555; margin-top: 2px; }
+
+        .card {
+            background: var(--card-bg);
+            padding: 8px;
+            border-radius: 4px;
+            margin-bottom: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .card h2 {
+            font-size: 11px;
+            margin-bottom: 5px;
+            color: var(--primary);
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 2px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 6px;
+        }
+
+        .grid-6 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 6px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 1px;
+            font-weight: bold;
+            font-size: 9px;
+        }
+
+        input, select {
+            padding: 3px;
+            border: 1px solid var(--border);
+            border-radius: 3px;
+            font-size: 10px;
+            width: 100%;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 10px;
+        }
+
+        button:hover { opacity: 0.9; }
+        
+        .btn-accent { background: var(--accent); }
+        .btn-danger { background: #c0392b; }
+        .btn-success { background: #27ae60; }
+
+        .ventana-row {
+            display: flex;
+            gap: 4px;
+            align-items: flex-end;
+            background: #f1f2f6;
+            padding: 5px;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .ventana-row .form-group {
+            flex: 1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+            font-size: 10px;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 4px;
+            text-align: left;
+        }
+
+        th { background: #eaeded; color: var(--primary); font-weight: bold; }
+
+        .editable-td input {
+            border: 1px dashed transparent;
+            background: transparent;
+            padding: 2px;
+            font-size: 10px;
+            color: var(--text);
+            width: 100%;
+        }
+
+        .editable-td input:hover, .editable-td input:focus {
+            border: 1px dashed #999;
+            background: #fffdf0;
+            outline: none;
+        }
+
+        .totales-box {
+            text-align: right;
+            font-size: 11px;
+        }
+        .totales-box div { margin: 2px 0; }
+        .grand-total { font-size: 13px; font-weight: bold; color: var(--accent); }
+
+        .no-print-actions {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* CONFIGURACIÓN EXCLUSIVA PARA UNA SOLA HOJA DE PDF */
+        @media print {
+            @page {
+                size: portrait;
+                margin: 0.4cm;
+            }
+            body { 
+                background: white; 
+                color: black; 
+                padding: 0; 
+                font-size: 9px; 
+            }
+            .card { border: none; padding: 0; margin-bottom: 6px; }
+            .card h2 { font-size: 10px; margin-bottom: 3px; }
+            
+            /* Ocultar todos los paneles de edición y botones en el PDF final */
+            #selector-ventanas, #panel-precios, .no-print-actions, .btn-danger, td:last-child, th:last-child { 
+                display: none !important; 
+            }
+            
+            .editable-td input {
+                border: none !important;
+                background: transparent !important;
+                padding: 0;
+                pointer-events: none;
+                font-size: 9px;
+                color: black;
+            }
+            
+            input { border: none; background: transparent; padding: 0; pointer-events: none; font-size: 9px; }
+            table { font-size: 8px; }
+            th, td { padding: 3px; border: 1px solid #555; }
+            th { background: #f0f0f0 !important; }
+            .totales-box { margin-top: 6px; }
+            .grand-total { font-size: 11px; color: black; }
+            header { padding: 2px 0; margin-bottom: 6px; }
+            header h1 { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Encabezado -->
+    <header>
+        <h1>Alba Decoraciones</h1>
+        <p>Teléfonos: 829 263 1340 | 849 856 4191 &bull; Instagram: Albadecoraciones.dom</p>
+    </header>
+
+    <!-- Datos del Cliente -->
+    <div class="card">
+        <h2>Datos del Cliente</h2>
+        <div class="grid-3">
+            <div class="form-group">
+                <label>Cliente / Proyecto:</label>
+                <input type="text" id="client-name" placeholder="Nombre">
+            </div>
+            <div class="form-group">
+                <label>Teléfono:</label>
+                <input type="text" id="client-phone" placeholder="Teléfono">
+            </div>
+            <div class="form-group">
+                <label>No. Cotización:</label>
+                <input type="text" id="invoice-num" placeholder="0001">
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL DE CONTROL DE PRECIOS BASE (Modificable en caliente - Se oculta en PDF) -->
+    <div class="card" id="panel-precios">
+        <h2>Configurar Precios de Materiales (No sale en el PDF)</h2>
+        <div class="grid-6" style="margin-bottom: 6px;">
+            <div class="form-group">
+                <label>Tela Visillo (Yd):</label>
+                <input type="number" id="p-visillo" value="300" oninput="procesarYRedibujarTabla()">
+            </div>
+            <div class="form-group">
+                <label>Tela Blackout (Yd):</label>
+                <input type="number" id="p-blackout" value="480" oninput="procesarYRedibujarTabla()">
+            </div>
+            <div class="form-group">
+                <label>Barra 10 Pies:</label>
+                <input type="number" id="p-barra10" value="1050" oninput="procesarYRedibujarTabla()">
+            </div>
+            <div class="form-group">
+                <label>Barra 12 Pies:</label>
+                <input type="number" id="p-barra12" value="1200" oninput="procesarYRedibujarTabla()">
+            </div>
+            <div class="form-group">
+                <label>Barra 14 Pies:</label>
+                <input type="number" id="p-barra14" value="1250" oninput="procesarYRedibujarTabla()">
+            </div>
+            <div class="form-group">
+                <label>Barra 16 Pies:</label>
+                <input type="number" id="p-barra16" value="1450" oninput="procesarYRedibujarTabla()">
+            </div>
+        </div>
+        <div class="grid-6">
+            <div class="form-group">
+                <label>Soportes/Instalación:</label>
+                <input type="number" id="p-soporte" value="500" oninput="procesarYRedibujarTabla()">
+            </div>
+            <div class="form-group">
+                <label>Cinta Transp. (Yd):</label>
+                <input type="number" id="p-cinta" value="120" oninput="procesarYRedibujarTabla()">
+            </div>
+            <div class="form-group">
+                <label>Cinta Broche (Yd):</label>
+                <input type="number" id="p-cintaBroche" value="120" oninput="procesarYRedibujarTabla()">
+            </div>
+            <div class="form-group">
+                <label>Carrito Ondas (Yd):</label>
+                <input type="number" id="p-carritoOndas" value="175" oninput="procesarYRedibujarTabla()">
+            </div>
+            <div class="form-group">
+                <label>Carrito Tachón (Paq):</label>
+                <input type="number" id="p-carritoTachon" value="350" oninput="procesarYRedibujarTabla()">
+            </div>
+            <div class="form-group">
+                <label>Gancho Tachón (Paq):</label>
+                <input type="number" id="p-ganchoTachon" value="70" oninput="procesarYRedibujarTabla()">
+            </div>
+        </div>
+    </div>
+
+    <!-- Generador de Medidas (Se oculta en PDF) -->
+    <div class="card" id="selector-ventanas">
+        <h2>Ingresar Medidas de Ventanas (No sale en el PDF)</h2>
+        <div id="ventanas-lista"></div>
+        <div style="margin-top: 6px;">
+            <button type="button" onclick="agregarVentana()">+ Agregar Ventana</button>
+        </div>
+    </div>
+
+    <!-- Botonera de Ajustes y Guardado -->
+    <div class="no-print-actions">
+        <button type="button" class="btn-accent" onclick="agregarArticuloExtra('Bastón de 36 cm', 390)">+ Bastón 36cm (RD$390)</button>
+        <button type="button" class="btn-accent" onclick="agregarArticuloExtra('Bastón de 60 cm', 500)">+ Bastón 60cm (RD$500)</button>
+        <button type="button" class="btn-accent" onclick="agregarArticuloExtra('Artículo Extra Manual', 0)">+ Agregar Otro Artículo</button>
+        <button type="button" class="btn-success" style="margin-left: auto;" onclick="window.print()">Imprimir / Guardar PDF</button>
+    </div>
+
+    <!-- Factura Detallada -->
+    <div class="card">
+        <h2>Detalle de Factura (Haz clic para editar textos, cantidades o precios manualmente)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Descripción del Concepto / Material</th>
+                    <th style="width: 60px; text-align: center;">Cant.</th>
+                    <th style="width: 110px; text-align: right;">Precio Unit.</th>
+                    <th style="width: 110px; text-align: right;">Total</th>
+                    <th class="no-print-column" style="width: 35px; text-align: center;">Borrar</th>
+                </tr>
+            </thead>
+            <tbody id="tabla-materiales">
+                <!-- Se poblará de forma dinámica -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Totales -->
+    <div class="card totales-box">
+        <div class="form-group" style="max-width: 150px; margin-left: auto; margin-bottom: 5px;">
+            <label>Descuento Comercial (RD$):</label>
+            <input type="number" id="descuento-input" value="0" min="0" style="text-align: right;" oninput="calcularTotalFactura()">
+        </div>
+        <div>Subtotal: <strong id="subtotal-neto">RD$ 0.00</strong></div>
+        <div>Descuento: <strong id="descuento-total">-RD$ 0.00</strong></div>
+        <div class="grand-total" style="margin-top: 4px;">Total a Pagar: <span id="total-general">RD$ 0.00</span></div>
+    </div>
+</div>
+
+<script>
+    let ventanaCount = 0;
+
+    // Obtener los precios definidos en el panel superior en caliente
+    function obtenerPreciosDePanel() {
+        return {
+            visillo: parseFloat(document.getElementById('p-visillo').value) || 0,
+            blackout: parseFloat(document.getElementById('p-blackout').value) || 0,
+            barra10: parseFloat(document.getElementById('p-barra10').value) || 0,
+            barra12: parseFloat(document.getElementById('p-barra12').value) || 0,
+            barra14: parseFloat(document.getElementById('p-barra14').value) || 0,
+            barra16: parseFloat(document.getElementById('p-barra16').value) || 0,
+            soporteTerminales: parseFloat(document.getElementById('p-soporte').value) || 0,
+            cinta: parseFloat(document.getElementById('p-cinta').value) || 0,
+            cintaBroche: parseFloat(document.getElementById('p-cintaBroche').value) || 0,
+            carritoOndas: parseFloat(document.getElementById('p-carritoOndas').value) || 0,
+            carritoTachones: parseFloat(document.getElementById('p-carritoTachon').value) || 0,
+            ganchoTachones: parseFloat(document.getElementById('p-ganchoTachon').value) || 0
+        };
+    }
+
+    function obtenerBarra(ancho, precios) {
+        const BARRAS = [
+            { label: 'Barra 10 Pies', cm: 304.8, precio: precios.barra10 },
+            { label: 'Barra 12 Pies', cm: 365.76, precio: precios.barra12 },
+            { label: 'Barra 14 Pies', cm: 426.72, precio: precios.barra14 },
+            { label: 'Barra 16 Pies', cm: 487.68, precio: precios.barra16 }
+        ];
+        for (let b of BARRAS) {
+            if (b.cm > ancho) return b;
+        }
+        return BARRAS[3]; // Fallback barra de 16 pies
+    }
+
+    function agregarVentana() {
+        ventanaCount++;
+        const lista = document.getElementById('ventanas-lista');
+        const div = document.createElement('div');
+        div.className = 'ventana-row';
+        div.id = `v-row-${ventanaCount}`;
+        div.innerHTML = `
+            <div class="form-group" style="flex: 1.5;">
+                <label>Ubicación / Ref:</label>
+                <input type="text" class="v-nombre" value="Ventana ${ventanaCount}" oninput="procesarYRedibujarTabla()">
+            </div>
+            <div class="form-group" style="width: 70px;">
+                <label>Ancho (cm):</label>
+                <input type="number" class="v-ancho" value="150" oninput="procesarYRedibujarTabla()">
+            </div>
+            <div class="form-group" style="width: 70px;">
+                <label>Largo (cm):</label>
+                <input type="number" class="v-largo" value="200" oninput="procesarYRedibujarTabla()">
+            </div>
+            <div class="form-group">
+                <label>Confección:</label>
+                <select class="v-confeccion" onchange="procesarYRedibujarTabla()">
+                    <option value="ondas">Ondas</option>
+                    <option value="tachones">Tachones</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Tipo Tela:</label>
+                <select class="v-tela" onchange="procesarYRedibujarTabla()">
+                    <option value="visillo">Visillo</option>
+                    <option value="blackout">Blackout</option>
+                    <option value="doble">Doble</option>
+                </select>
+            </div>
+            <button type="button" class="btn-danger" style="padding: 4px 8px;" onclick="eliminarVentana(${ventanaCount})">X</button>
+        `;
+        lista.appendChild(div);
+        procesarYRedibujarTabla();
+    }
+
+    function eliminarVentana(id) {
+        const elemento = document.getElementById(`v-row-${id}`);
+        if(elemento) elemento.remove();
+        procesarYRedibujarTabla();
+    }
+
+    // Calcula el costo de la ventana en caliente con la regla de 2.5 y los precios asignados por el usuario
+    function procesarYRedibujarTabla() {
+        const tbody = document.getElementById('tabla-materiales');
+        const preciosBase = obtenerPreciosDePanel();
+        
+        // Almacenar temporalmente los ítems adicionales/modificados por el usuario
+        const adicionalesGuardados = [];
+        const filasActuales = tbody.querySelectorAll('tr');
+        filasActuales.forEach(f => {
+            if (f.classList.contains('fila-adicional') || f.classList.contains('fila-ventana-modificada')) {
+                const inputs = f.querySelectorAll('input');
+                adicionalesGuardados.push({
+                    esModificada: f.classList.contains('fila-ventana-modificada'),
+                    descripcion: inputs[0].value,
+                    cantidad: parseFloat(inputs[1].value) || 1,
+                    precio: parseFloat(inputs[2].value) || 0
+                });
+            }
+        });
+
+        tbody.innerHTML = '';
+
+        // Calcular dinámicamente cada ventana agregada en base a los inputs del panel
+        const filasVentanas = document.querySelectorAll('.ventana-row');
+        filasVentanas.forEach(f => {
+            const nombre = f.querySelector('.v-nombre').value;
+            const ancho = parseFloat(f.querySelector('.v-ancho').value) || 0;
+            const largo = parseFloat(f.querySelector('.v-largo').value) || 0;
+            const confeccion = f.querySelector('.v-confeccion').value;
+            const tela = f.querySelector('.v-tela').value;
+
+            if (ancho <= 0) return;
+
+            const esDoble = (tela === 'doble');
+            const factorDoble = esDoble ? 2 : 1;
+
+            const barra = obtenerBarra(ancho, preciosBase);
+            const costoSoporteInstalacion = preciosBase.soporteTerminales * factorDoble;
+            const costoBarraTotal = barra.precio * factorDoble;
+
+            const metrosRiel = ancho / 100;
+            const metrosTela = metrosRiel * 2.5; // Regla del 2.5
+            let yardas = Math.ceil(metrosTela / 0.9144);
+            if (yardas < 1) yardas = 1;
+
+            let costoTelas = 0;
+            if (tela === 'visillo' || esDoble) costoTelas += yardas * preciosBase.visillo;
+            if (tela === 'blackout' || esDoble) costoTelas += yardas * preciosBase.blackout;
+
+            let costoAccesorios = 0;
+            if (confeccion === 'ondas') {
+                let yardasAccesorios = Math.ceil(yardas * 0.7);
+                if (yardasAccesorios < 1) yardasAccesorios = 1;
+                costoAccesorios += (yardasAccesorios * preciosBase.carritoOndas * factorDoble);
+                costoAccesorios += (yardas * preciosBase.cinta * factorDoble);
+                costoAccesorios += (yardas * preciosBase.cintaBroche * factorDoble);
+            } else if (confeccion === 'tachones') {
+                costoAccesorios += preciosBase.carritoTachones + preciosBase.ganchoTachones;
+            }
+
+            const precioVentanaCalculada = costoBarraTotal + costoSoporteInstalacion + costoTelas + costoAccesorios;
+            const descripcionPorDefecto = `Cortina Completa: ${nombre} (${confeccion.toUpperCase()}, ${tela.toUpperCase()}) - ${ancho}x${largo} cm`;
+
+            insertarFilaEnTabla(descripcionPorDefecto, 1, precioVentanaCalculada, false);
+        });
+
+        // Restaurar adicionales y manuales
+        adicionalesGuardados.forEach(item => {
+            insertarFilaEnTabla(item.descripcion, item.cantidad, item.precio, true);
+        });
+
+        calcularTotalFactura();
+    }
+
+    function insertarFilaEnTabla(descripcion, cantidad, precio, esAdicional) {
+        const tbody = document.getElementById('tabla-materiales');
+        const tr = document.createElement('tr');
+        
+        tr.className = esAdicional ? 'fila-adicional' : 'fila-ventana';
+        const totalFila = cantidad * precio;
+
+        tr.innerHTML = `
+            <td class="editable-td">
+                <input type="text" value="${descripcion}" onchange="marcarComoModificado(this)">
+            </td>
+            <td class="editable-td" style="text-align: center;">
+                <input type="number" value="${cantidad}" style="text-align: center;" oninput="actualizarTotalFilaDirecto(this)">
+            </td>
+            <td class="editable-td">
+                <input type="number" value="${precio}" style="text-align: right;" oninput="actualizarTotalFilaDirecto(this)">
+            </td>
+            <td class="fila-total-calculado" style="text-align: right; font-weight: bold;">
+                RD$ ${totalFila.toLocaleString('en-US', {minimumFractionDigits: 2})}
+            </td>
+            <td class="no-print-column" style="text-align: center;">
+                <button type="button" class="btn-danger" style="padding: 1px 5px; font-size: 9px;" onclick="eliminarFilaFactura(this)">X</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    }
+
+    function marcarComoModificado(input) {
+        const fila = input.parentElement.parentElement;
+        if (fila.classList.contains('fila-ventana')) {
+            fila.classList.remove('fila-ventana');
+            fila.classList.add('fila-ventana-modificada');
+        }
+        calcularTotalFactura();
+    }
+
+    function agregarArticuloExtra(nombre, precio) {
+        insertarFilaEnTabla(nombre, 1, precio, true);
+        calcularTotalFactura();
+    }
+
+    function eliminarFilaFactura(btn) {
+        btn.parentElement.parentElement.remove();
+        calcularTotalFactura();
+    }
+
+    function actualizarTotalFilaDirecto(input) {
+        const fila = input.parentElement.parentElement;
+        const inputs = fila.querySelectorAll('input');
+        
+        if (fila.classList.contains('fila-ventana')) {
+            fila.classList.remove('fila-ventana');
+            fila.classList.add('fila-ventana-modificada');
+        }
+
+        const cant = parseFloat(inputs[1].value) || 0;
+        const precio = parseFloat(inputs[2].value) || 0;
+        const total = cant * precio;
+
+        fila.querySelector('.fila-total-calculado').innerText = `RD$ ${total.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+        calcularTotalFactura();
+    }
+
+    function calcularTotalFactura() {
+        const filas = document.querySelectorAll('#tabla-materiales tr');
+        let subtotal = 0;
+
+        filas.forEach(f => {
+            const inputs = f.querySelectorAll('input');
+            if (inputs.length >= 3) {
+                const cant = parseFloat(inputs[1].value) || 0;
+                const precio = parseFloat(inputs[2].value) || 0;
+                subtotal += (cant * precio);
+            }
+        });
+
+        document.getElementById('subtotal-neto').innerText = `RD$ ${subtotal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+        const desc = parseFloat(document.getElementById('descuento-input').value) || 0;
+        document.getElementById('descuento-total').innerText = `-RD$ ${desc.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+        
+        let total = subtotal - desc;
+        if (total < 0) total = 0;
+        document.getElementById('total-general').innerText = `RD$ ${total.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+    }
+
+    agregarVentana();
+</script>
+
+</body>
+</html>
