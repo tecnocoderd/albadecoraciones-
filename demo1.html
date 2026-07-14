@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cotizador Compacto - Alba Decoraciones</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #d35400;
+            --bg: #f5f6fa;
+            --card-bg: #ffffff;
+            --border: #dcdde1;
+            --text: #2f3640;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 15px;
+            font-size: 13px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        header h1 { font-size: 20px; margin-bottom: 2px; }
+        header p { font-size: 11px; opacity: 0.9; }
+
+        .card {
+            background: var(--card-bg);
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .card h2 {
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: var(--primary);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 3px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 5px;
+        }
+
+        .form-group label {
+            margin-bottom: 2px;
+            font-weight: 600;
+            font-size: 11px;
+            color: #4b5563;
+        }
+
+        input, select {
+            padding: 6px;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 12px;
+            width: 100%;
+            background: #fff;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 11px;
+            transition: background 0.2s;
+        }
+
+        button:hover { background: #1a252f; }
+        
+        .btn-accent { background: var(--accent); }
+        .btn-accent:hover { background: #b33900; }
+        .btn-danger { background: #c0392b; }
+        .btn-danger:hover { background: #962d22; }
+        .btn-success { background: #27ae60; }
+        .btn-success:hover { background: #1e824c; }
+
+        .ventana-card {
+            border-left: 4px solid var(--primary);
+            position: relative;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            padding: 4px 8px;
+            font-size: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 11px;
+        }
+
+        th, td {
+            border: 1px solid var(--border);
+            padding: 6px;
+            text-align: left;
+        }
+
+        th { background: #f8f9fa; color: var(--primary); font-weight: bold; }
+
+        .editable-td input {
+            padding: 3px;
+            border: 1px dashed #b5b5b5;
+            background: #fffdf9;
+            border-radius: 3px;
+            font-size: 11px;
+        }
+
+        .totales-box {
+            text-align: right;
+            font-size: 13px;
+        }
+        .totales-box div { margin: 4px 0; }
+        .grand-total { font-size: 16px; font-weight: bold; color: var(--accent); }
+
+        .no-print-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        /* Estilos Adaptativos para Celulares */
+        @media (max-width: 600px) {
+            body { padding: 5px; }
+            .card { padding: 8px; }
+            table, thead, tbody, th, td, tr { display: block; }
+            thead tr { position: absolute; top: -9999px; left: -9999px; }
+            tr { border: 1px solid var(--border); margin-bottom: 8px; padding: 4px; background: #fff; }
+            td { border: none; position: relative; padding-left: 45%; text-align: right; border-bottom: 1px solid #f1f2f6; }
+            td:last-child { border-bottom: none; }
+            td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 8px;
+                width: 40%;
+                text-align: left;
+                font-weight: bold;
+                color: #57606f;
+            }
+            .editable-td input { text-align: right; width: 100%; }
+            .remove-btn { position: static; margin-top: 5px; width: 100%; text-align: center; }
+            .no-print-actions button { width: 100%; }
+        }
+
+        /* CONFIGURACIÓN CRÍTICA: Forzar todo a una sola página en PDF/Impresión */
+        @media print {
+            @page {
+                size: portrait;
+                margin: 0.8cm; /* Margen pequeño para aprovechar toda la hoja */
+            }
+            body { 
+                background: white; 
+                color: black; 
+                padding: 0; 
+                font-size: 10px; /* Letra compacta */
+            }
+            .container { max-width: 100%; }
+            .card { border: none; box-shadow: none; padding: 2px 0; margin-bottom: 4px; page-break-inside: avoid; }
+            .card h2 { font-size: 11px; margin-bottom: 3px; border-bottom: 1px solid #000; }
+            
+            /* Ocultar elementos de control de forma estricta */
+            .ventana-card, .no-print-actions, .btn-danger, td:last-child, th:last-child { 
+                display: none !important; 
+            }
+            
+            input, select { border: none; background: transparent; padding: 0; pointer-events: none; font-size: 10px; }
+            .editable-td input { border: none; background: transparent; pointer-events: none; text-align: left; font-size: 10px; }
+            table { font-size: 9px; margin-top: 3px; }
+            th, td { padding: 4px; border: 1px solid #000; }
+            th { background: #f0f0f0 !important; color: #000; }
+            .totales-box { page-break-inside: avoid; margin-top: 5px; }
+            .grand-total { font-size: 13px; color: #000; }
+            header { background: #2c3e50 !important; color: white !important; border-radius: 4px; padding: 8px; margin-bottom: 6px; }
+            header h1 { font-size: 16px; }
+            header p { color: white !important; font-size: 9px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Encabezado de la Empresa -->
+    <header>
+        <h1>Alba Decoraciones</h1>
+        <p>Teléfonos: 829 263 1340 | 849 856 4191 &bull; Instagram: Albadecoraciones.dom</p>
+    </header>
+
+    <!-- Datos de Factura -->
+    <div class="card">
+        <h2>Cliente & Factura</h2>
+        <div class="grid-3">
+            <div class="form-group">
+                <label>Cliente:</label>
+                <input type="text" id="client-name" placeholder="Nombre del cliente">
+            </div>
+            <div class="form-group">
+                <label>Teléfono:</label>
+                <input type="text" id="client-phone" placeholder="Número">
+            </div>
+            <div class="form-group">
+                <label>No. Factura:</label>
+                <input type="text" id="invoice-num" placeholder="Ej: 0001">
+            </div>
+        </div>
+    </div>
+
+    <!-- Área de Ventanas -->
+    <div id="ventanas-container"></div>
+
+    <!-- Botonera -->
+    <div class="no-print-actions">
+        <button type="button" onclick="agregarVentana()">+ Agregar Ventana</button>
+        <button type="button" class="btn-accent" onclick="agregarArticuloRapido('Bastón de 36 cm', 390)">+ Bastón 36cm</button>
+        <button type="button" class="btn-accent" onclick="agregarArticuloRapido('Bastón de 60 cm', 500)">+ Bastón 60cm</button>
+        <button type="button" class="btn-accent" onclick="agregarArticuloManual()">+ Artículo Extra</button>
+        <button type="button" class="btn-success" style="margin-left: auto;" onclick="generarPDF()">Imprimir / PDF</button>
+    </div>
+
+    <!-- Resultados -->
+    <div class="card">
+        <h2>Detalle de Cotización (Editable)</h2>
+        <div style="overflow-x: auto;">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Descripción del Material / Servicio</th>
+                        <th style="width: 80px;">Cant.</th>
+                        <th style="width: 100px;">Precio</th>
+                        <th style="width: 120px;">Total</th>
+                        <th class="no-print-column" style="width: 50px;">Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-materiales">
+                    <!-- JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Totales -->
+    <div class="card totales-box">
+        <div class="form-group" style="max-width: 200px; margin-left: auto;">
+            <label>Descuento (RD$):</label>
+            <input type="number" id="descuento-input" value="0" min="0" oninput="calcularTodo()">
+        </div>
+        <div style="font-size: 11px; margin-top: 5px;">Subtotal: <span id="subtotal-neto">RD$ 0.00</span></div>
+        <div style="font-size: 11px;">Descuento: <span id="descuento-total">-RD$ 0.00</span></div>
+        <div class="grand-total">Total Neto: <span id="total-general">RD$ 0.00</span></div>
+    </div>
+</div>
+
+<script>
+    const PRECIOS = {
+        barra10: 1050, barra12: 1200, barra14: 1250, barra16: 1450,
+        blackout: 480, visillo: 300, carritoOndas: 175, cinta: 120,
+        soporteTerminales: 500, cintaBroche: 120, carritoTachones: 350, ganchoTachones: 70
+    };
+
+    const BARRAS_CM = [
+        { label: 'Barra de 10 Pies', cm: 304.8, precio: 1050 },
+        { label: 'Barra de 12 Pies', cm: 365.76, precio: 1200 },
+        { label: 'Barra de 14 Pies', cm: 426.72, precio: 1250 },
+        { label: 'Barra de 16 Pies', cm: 487.68, precio: 1450 }
+    ];
+
+    let ventanaCount = 0;
+    let itemsAdicionales = [];
+
+    function agregarVentana() {
+        ventanaCount++;
+        const container = document.getElementById('ventanas-container');
+        
+        const div = document.createElement('div');
+        div.className = 'card ventana-card';
+        div.id = `ventana-${ventanaCount}`;
+        div.innerHTML = `
+            <button class="btn-danger remove-btn" onclick="eliminarVentana(${ventanaCount})">X</button>
+            <div class="grid-3" style="margin-bottom: 5px;">
+                <div class="form-group">
+                    <label>Ubicación:</label>
+                    <input type="text" class="v-nombre" value="Ventana ${ventanaCount}" oninput="calcularTodo()">
+                </div>
+                <div class="form-group">
+                    <label>Ancho (cm):</label>
+                    <input type="number" class="v-ancho" value="120" min="1" oninput="calcularTodo()">
+                </div>
+                <div class="form-group">
+                    <label>Largo (cm):</label>
+                    <input type="number" class="v-largo" value="160" min="1" oninput="calcularTodo()">
+                </div>
+            </div>
+            <div class="grid-3">
+                <div class="form-group">
+                    <label>Confección:</label>
+                    <select class="v-confeccion" onchange="calcularTodo()">
+                        <option value="ondas">Ondas</option>
+                        <option value="tachones">Tachones</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tela:</label>
+                    <select class="v-tela" onchange="calcularTodo()">
+                        <option value="visillo">Solo Visillo</option>
+                        <option value="blackout">Solo Blackout</option>
+                        <option value="doble">Doble (Visillo + Blackout)</option>
+                    </select>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+        calcularTodo();
+    }
+
+    function eliminarVentana(id) {
+        document.getElementById(`ventana-${id}`).remove();
+        calcularTodo();
+    }
+
+    function agregarArticuloRapido(nombre, precio) {
+        itemsAdicionales.push({ descripcion: nombre, cantidad: 1, precio: precio });
+        calcularTodo();
+    }
+
+    function agregarArticuloManual() {
+        itemsAdicionales.push({ descripcion: 'Artículo Extra', cantidad: 1, precio: 0 });
+        calcularTodo();
+    }
+
+    function eliminarAdicional(index) {
+        itemsAdicionales.splice(index, 1);
+        calcularTodo();
+    }
+
+    function actualizarAdicional(index, campo, valor) {
+        if(campo === 'descripcion') itemsAdicionales[index].descripcion = valor;
+        else itemsAdicionales[index][campo] = parseFloat(valor) || 0;
+        calcularTodo();
+    }
+
+    function obtenerBarraOptima(anchoCm) {
+        for (let barra of BARRAS_CM) {
+            if (barra.cm > anchoCm) {
+                return { label: barra.label, precio: barra.precio };
+            }
+        }
+        return { label: 'Barra de 16 Pies (Acople)', precio: PRECIOS.barra16 };
+    }
+
+    function calcularTodo() {
+        const tabla = document.getElementById('tabla-materiales');
+        tabla.innerHTML = ''; 
+
+        let consolidado = {};
+
+        function agruparInsumo(descripcion, cantidad, precioUnidad) {
+            if (consolidado[descripcion]) {
+                consolidado[descripcion].cantidad += cantidad;
+            } else {
+                consolidado[descripcion] = { cantidad, precio: precioUnidad };
+            }
+        }
+
+        const ventanasElem = document.querySelectorAll('.ventana-card');
+        ventanasElem.forEach(v => {
+            const nombre = v.querySelector('.v-nombre').value;
+            const ancho = parseFloat(v.querySelector('.v-ancho').value) || 0;
+            const largo = parseFloat(v.querySelector('.v-largo').value) || 0;
+            const confeccion = v.querySelector('.v-confeccion').value;
+            const tipoTela = v.querySelector('.v-tela').value;
+
+            if (ancho <= 0) return;
+
+            const esDoble = (tipoTela === 'doble');
+            const cantBarras = esDoble ? 2 : 1;
+            const multiplicadorGasto = esDoble ? 2 : 1;
+
+            const barraBase = obtenerBarraOptima(ancho);
+            agruparInsumo(`${barraBase.label} [${nombre}]`, cantBarras, barraBase.precio);
+            agruparInsumo(`Soportes e Inst. [${nombre}]`, cantBarras, PRECIOS.soporteTerminales);
+
+            let metrosRiel = ancho / 100;
+            let metrosTelaEstirada = metrosRiel * 2.5; // Regla del 2.5
+            let yardasNecesarias = Math.ceil(metrosTelaEstirada / 0.9144);
+            if (yardasNecesarias < 1) yardasNecesarias = 1;
+
+            if (confeccion === 'ondas') {
+                if (tipoTela === 'visillo' || esDoble) {
+                    agruparInsumo(`Tela Visillo (Yd) [${nombre}]`, yardasNecesarias * multiplicadorGasto, PRECIOS.visillo);
+                }
+                if (tipoTela === 'blackout' || esDoble) {
+                    agruparInsumo(`Tela Blackout (Yd) [${nombre}]`, yardasNecesarias * multiplicadorGasto, PRECIOS.blackout);
+                }
+
+                let yardasAccesorios = Math.ceil(yardasNecesarias * 0.7); 
+                if (yardasAccesorios < 1) yardasAccesorios = 1;
+
+                agruparInsumo(`Carrito Ondas (Yd) [${nombre}]`, yardasAccesorios * multiplicadorGasto, PRECIOS.carritoOndas);
+                agruparInsumo(`Cinta Transparente (Yd) [${nombre}]`, yardasNecesarias * multiplicadorGasto, PRECIOS.cinta);
+                agruparInsumo(`Cinta de Broche (Yd) [${nombre}]`, yardasNecesarias * multiplicadorGasto, PRECIOS.cintaBroche);
+
+            } else if (confeccion === 'tachones') {
+                if (tipoTela === 'visillo' || esDoble) {
+                    agruparInsumo(`Tela Visillo (Yd) [${nombre}]`, yardasNecesarias * multiplicadorGasto, PRECIOS.visillo);
+                }
+                if (tipoTela === 'blackout' || esDoble) {
+                    agruparInsumo(`Tela Blackout (Yd) [${nombre}]`, yardasNecesarias * multiplicadorGasto, PRECIOS.blackout);
+                }
+                agruparInsumo(`Carrito Tachón (Paq) [${nombre}]`, 1, PRECIOS.carritoTachones);
+                agruparInsumo(`Gancho Tachón (Paq) [${nombre}]`, 1, PRECIOS.ganchoTachones);
+            }
+        });
+
+        let subtotal = 0;
+
+        for (let desc in consolidado) {
+            let item = consolidado[desc];
+            let itemTotal = item.cantidad * item.precio;
+            subtotal += itemTotal;
+
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td data-label="Descripción" class="editable-td"><input type="text" value="${desc}" onchange="recalcularFilaDirecta(this)"></td>
+                <td data-label="Cant." class="editable-td"><input type="number" value="${item.cantidad}" oninput="recalcularFilaDirecta(this)"></td>
+                <td data-label="Precio" class="editable-td"><input type="number" value="${item.precio}" oninput="recalcularFilaDirecta(this)"></td>
+                <td data-label="Total">RD$ ${itemTotal.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                <td><button class="btn-danger" style="padding:2px 5px; font-size: 10px;" onclick="this.parentElement.parentElement.remove(); recomputarFinanzasDeTabla();">X</button></td>
+            `;
+            tabla.appendChild(tr);
+        }
+
+        itemsAdicionales.forEach((item, index) => {
+            let itemTotal = item.cantidad * item.precio;
+            subtotal += itemTotal;
+
+            let tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td data-label="Descripción" class="editable-td"><input type="text" value="${item.descripcion}" oninput="actualizarAdicional(${index}, 'descripcion', this.value)"></td>
+                <td data-label="Cant." class="editable-td"><input type="number" value="${item.cantidad}" oninput="actualizarAdicional(${index}, 'cantidad', this.value)"></td>
+                <td data-label="Precio" class="editable-td"><input type="number" value="${item.precio}" oninput="actualizarAdicional(${index}, 'precio', this.value)"></td>
+                <td data-label="Total">RD$ ${itemTotal.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+                <td><button class="btn-danger" style="padding:2px 5px; font-size: 10px;" onclick="eliminarAdicional(${index})">X</button></td>
+            `;
+            tabla.appendChild(tr);
+        });
+
+        inyectarPreciosFinales(subtotal);
+    }
+
+    function recalcularFilaDirecta(input) {
+        let fila = input.parentElement.parentElement;
+        let inputs = fila.querySelectorAll('input');
+        let cant = parseFloat(inputs[1].value) || 0;
+        let precio = parseFloat(inputs[2].value) || 0;
+        let nuevoTotal = cant * precio;
+        
+        fila.children[3].innerText = `RD$ ${nuevoTotal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+        recomputarFinanzasDeTabla();
+    }
+
+    function recomputarFinanzasDeTabla() {
+        let filas = document.querySelectorAll('#tabla-materiales tr');
+        let subtotal = 0;
+        filas.forEach(f => {
+            let inputs = f.querySelectorAll('input');
+            if(inputs.length >= 3) {
+                let cant = parseFloat(inputs[1].value) || 0;
+                let precio = parseFloat(inputs[2].value) || 0;
+                subtotal += (cant * precio);
+            }
+        });
+        inyectarPreciosFinales(subtotal);
+    }
+
+    function inyectarPreciosFinales(subtotal) {
+        document.getElementById('subtotal-neto').innerText = `RD$ ${subtotal.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+        let descuento = parseFloat(document.getElementById('descuento-input').value) || 0;
+        document.getElementById('descuento-total').innerText = `-RD$ ${descuento.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+        
+        let totalGeneral = subtotal - descuento;
+        if(totalGeneral < 0) totalGeneral = 0;
+        document.getElementById('total-general').innerText = `RD$ ${totalGeneral.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+    }
+
+    function generarPDF() {
+        window.print();
+    }
+
+    agregarVentana();
+</script>
+
+</body>
+</html>
